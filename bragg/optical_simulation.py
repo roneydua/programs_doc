@@ -25,9 +25,10 @@ locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 # plt.style.use("default")
 plt.style.use("common_functions/roney3.mplstyle")
 cores = plt.rcParams["axes.prop_cycle"].by_key()["color"]
-
+TESE_FOLDER = "../tese/images/not_used_on_thesis"
 FIG_L = 6.29
-FIG_A = (60.0) / 25.4
+# change for 16:10
+FIG_A = FIG_L / 1.6
 
 l_peak = 1550.0
 delta_l = 5000
@@ -37,8 +38,6 @@ bragg = Bragg(fbg_size=6.5e-3,
               wavelength_peak=l_peak,
               delta_span_wavelength=delta_l,
               diff_of_peak=1)
-
-
 
 
 # plt.plot(bragg.wavelength_span_nm, bragg.r0)
@@ -104,10 +103,10 @@ def plot_reflection_of_transmition(deformation=0.0):
 
 
 def plot_bragg_spectrum():
-    fig, ax = plt.subplots(1, 1, num=1, figsize=(FIG_L, FIG_A))
+    fig, ax = plt.subplots(1, 1, num=1, figsize=(FIG_L, FIG_A*0.75))
     ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
-    ax.set_ylabel(r'Refletividade, \%')
-    ax.set_xlabel(r'$\lambda, \si{\nm}$')
+    ax.set_ylabel(r'Refletividade [\unit{\percent}]')
+    ax.set_xlabel(r'$\lambda [\unit{\nm}]$')
 
     def plot(_r, i, p):
         # ax.plot(bragg.wavelength_span_nm,np.ones(delta_l),ls+cores,label='Banda Larga')
@@ -121,15 +120,15 @@ def plot_bragg_spectrum():
                 color=cores[p],
                 ls='-.')
 
-    plot(bragg.calc_bragg(-0.0001), r"$\varepsilon=-{10}^{-4}$", 0)
+    plot(bragg.calc_bragg(-0.0001), r"$d^{\prime}$", 0)
     plot(bragg.r0, r"$\varepsilon=0$", 1)
-    plot(bragg.calc_bragg(0.0001), r"$\varepsilon={10}^{-4}$", 2)
+    plot(bragg.calc_bragg(0.0001), r"$d^{\prime\prime}$", 2)
     ax.set_xlim(1549.5, 1550.5)
     plt.legend(ncols=3,
                bbox_to_anchor=(0, 1, 1, 0),
                loc="lower left",
                mode="expand")
-    plt.savefig("./../../images/bragg_spectrum.pdf", format="pdf")
+    plt.savefig(TESE_FOLDER+"/bragg_spectrum.pdf", format="pdf")
     plt.close(fig=1)
 
 
@@ -140,8 +139,8 @@ def plot_drawFig6_spectres():
         # ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
         ax.xaxis.set_major_locator(ticker.MultipleLocator(base=1))
 
-        ax.set_ylabel(r'$\si{\watt\per\nm}$')
-        ax.set_xlabel(r'$\lambda, \si{\nm}$')
+        ax.set_ylabel(r'Refletividade')
+        ax.set_xlabel(r'$\lambda [\si{\nm}]$')
         ax.set_xlim(1549, 1551)
         return fig, ax
 
@@ -161,36 +160,36 @@ def plot_drawFig6_spectres():
 
     # draw figure with zero strain
     fig, ax = make_figure()
-    plot(ax, bragg.calc_bragg(0.), r"$\Delta\varepsilon = 0$", 1)
+    plot(ax, bragg.calc_bragg(0.), r"$\Delta\varepsilon = 0$", 0)
     # plot(bragg.r0, r"$\varepsilon=0$",1)
-    plot(ax, bragg.calc_bragg(0.), r"$\Delta\varepsilon = 0$", 2)
+    plot(ax, bragg.calc_bragg(0.), r"$\Delta\varepsilon = 0$", 1)
     plt.legend(ncols=2,
                bbox_to_anchor=(0, 1, 1, 0),
                loc="lower left",
                mode="expand")
-    plt.savefig("./../../images/drawFig6_zero_spectre.pdf", format="pdf")
+    plt.savefig(TESE_FOLDER+"/drawFig6_zero_spectre.pdf", format="pdf")
     plt.close(fig=1)
     # draw figure with positive strain on fbg1
     de = .25e-4
     fig, ax = make_figure()
-    plot(ax, bragg.calc_bragg(-de), r"$\Delta\varepsilon \leq 0$", 1)
-    plot(ax, bragg.calc_bragg(de), r"$\Delta\varepsilon \geq 0$", 2)
+    plot(ax, bragg.calc_bragg(-de), r"$\Delta\varepsilon \leq 0$", 0)
+    plot(ax, bragg.calc_bragg(de), r"$\Delta\varepsilon \geq 0$", 1)
     plt.legend(ncols=2,
                bbox_to_anchor=(0, 1, 1, 0),
                loc="lower left",
                mode="expand")
-    plt.savefig("./../../images/drawFig6_positive_dx_spectre.pdf",
+    plt.savefig(TESE_FOLDER+"/drawFig6_positive_dx_spectre.pdf",
                 format="pdf")
     plt.close(fig=1)
     # draw figure with negative strain on fbg1
     fig, ax = make_figure()
-    plot(ax, bragg.calc_bragg(de), r"$\Delta\varepsilon \geq 0$", 1)
-    plot(ax, bragg.calc_bragg(-de), r"$\Delta\varepsilon \leq 0$", 2)
+    plot(ax, bragg.calc_bragg(de), r"$\Delta\varepsilon \geq 0$", 0)
+    plot(ax, bragg.calc_bragg(-de), r"$\Delta\varepsilon \leq 0$", 1)
     plt.legend(ncols=2,
                bbox_to_anchor=(0, 1, 1, 0),
                loc="lower left",
                mode="expand")
-    plt.savefig("./../../images/drawFig6_negative_dx_spectre.pdf",
+    plt.savefig(TESE_FOLDER+"/drawFig6_negative_dx_spectre.pdf",
                 format="pdf")
     plt.close(fig=1)
 
@@ -208,7 +207,6 @@ def plot_response_transmition_reflection():
     ax.plot(de, max_E)
     ax.set_xlabel(r'$\Delta x,\si{\um}$')
     # ax.plot(bragg.wavelength_span_nm, r_expand * r_compression)
-
 
 
 def plot_pot_vs_deformation():
@@ -246,7 +244,6 @@ def plot_pot_vs_deformation():
     plt.close(fig=1)
 
 
-
 def graphicsAnimation(_e=0):
 
     def dbm2W(power):
@@ -279,7 +276,5 @@ def graphicsAnimation(_e=0):
 # interactive(graphicsAnimation, _e=(-5e-5, 5e-5, 1e-6))
 
 # plot_drawFig6_spectres()
-plot_bragg_spectrum()
 # plot_bragg_spectrum()
-
-
+# plot_bragg_spectrum()
