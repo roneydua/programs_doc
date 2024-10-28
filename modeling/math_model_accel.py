@@ -31,7 +31,7 @@ class states:
             q: Attitude quaterion.
         """
         self.q = q
-        # self.euler = fq.quat2Euler(q, deg=1)
+        self.euler = fq.quat2Euler(q, deg=1)
         self.rot = fq.rotationMatrix(self.q)
 
     def psi(self):
@@ -63,9 +63,10 @@ class AccelModelInertialFrame(object):
     def __init__(
         self,
         seismic_edge=16.4e-3,
-        fiber_diameter=125e-6,
+        fiber_diameter=fiber_diameter,
         fiber_length=3e-3,
         damper_for_computation_simulations=0.0,
+        density=density,
     ):
         """
         __init__ Class to compute states wrt inertial frame
@@ -75,12 +76,13 @@ class AccelModelInertialFrame(object):
             fiber_diameter: Defaults to 125e-6.
             fiber_length: Defaults to 3e-3.
             fibers_with_info: Defaults to np.arange(1, 13).
-            inverse_problem_full: Defaults to True.
             damper_for_computation_simulations: Defaults to 0.0.
+            density: density of seismic mass. Defaults =  2.6989e3
         """
+        self.density = density
+        self.fiber_diameter =fiber_diameter
+        
         self.damper_for_computation_simulations = damper_for_computation_simulations
-
-        self.fiber_diameter = fiber_diameter
         # Fiber diameter
         self.fiber_length = fiber_length
         """initial fiber length"""
@@ -171,6 +173,12 @@ class AccelModelInertialFrame(object):
             "-xy",
             "-x-y",
         ]
+        """ undamped natural frequency hz"""
+        self.undamped_natural_frequency_hz = np.sqrt(4*self.k/self.seismic_mass) / (np.pi*2.)
+        print("The natural frequency is %1.1f Hz \t" % self.undamped_natural_frequency_hz)
+        """ undamped natural frequency hz"""
+        self.minimal_recomendated_time_step = 0.1 / self.undamped_natural_frequency_hz
+        print("Is is recomendated that time step of integrator is 10x(1/natural frequency) so %1.0e s \t" % self.minimal_recomendated_time_step)
         # legend of numerical point
 
     def update_inertial_coil_connections(self):
@@ -388,10 +396,10 @@ class AccelModelInertialFrame(object):
             * Qb.T
             @ sum_f_hat_dell_dfdq_B
         )
-        # dd_x[20:23] += (
-        #     self.damper_for_computation_simulations
-        #     * self.inertial_base_sensor_inv[0, 0]
-        # ) * (rot_qb.T@rot_qm@wm - wb)
+        dd_x[20:23] += (
+            self.damper_for_computation_simulations
+            * self.inertial_base_sensor_inv[0, 0]
+        ) * (rot_qb.T@rot_qm@wm - wb)
         # calculate a angular acceleration of body sensor
         # ATTENTION! due to symmetry, the product fq.screwMatrix(wm) @ self.inertial_seismic_mass @ wm it is always zero!
 
@@ -423,6 +431,7 @@ class InverseProblem(AccelModelInertialFrame):
 
     def __init__(
         self,
+        density:float,
         fibers_with_info: np.ndarray,
         recover_angular_accel=False,
         fiber_length=3e-3,
@@ -431,13 +440,14 @@ class InverseProblem(AccelModelInertialFrame):
         """
         __init__ Constructor of inverse_problem.
         Args:
+            density: density of seismic mass.
             fibers_with_info: fiber indices considered to solve the problem
             recover_angular_accel: Defaults to False.
             fiber_length: size of fiber. Defaults is 3mm or (0.003m)
         **kwargs: full_estimation: True to recover the term q_M_B cross r_m_B
 
         """
-        super().__init__(fiber_length=fiber_length)
+        super().__init__(fiber_length=fiber_length,density=density)
         self.fibers_with_info = fibers_with_info
         self.fibers_with_info_index = fibers_with_info - 1
         self.k_by_m = self.k / self.seismic_mass
@@ -573,14 +583,14 @@ class SimpleSolution(AccelModelInertialFrame):
 
     norm_of_estimated_f_B = np.zeros((12, 1), dtype=np.float64)
 
-    def __init__(self, fibers_with_info: np.ndarray, fiber_length=3e-3):
+    def __init__(self, fibers_with_info: np.ndarray, density:float,fiber_length=3e-3):
         """
         __init__ Constructor of inverse_problem.
         Args:
             fibers_with_info: fiber indices considered to solve the problem
             recover_angular_accel: Defaults to False.
         """
-        super().__init__(fiber_length=fiber_length)
+        super().__init__(fiber_length=fiber_length, density=density)
         # self.fibers_with_info = fibers_with_info
         self.fibers_with_info_index = fibers_with_info - 1
         self.coef_one_fiber = 4.0 * self.k / self.seismic_mass

@@ -51,19 +51,12 @@ graphics = [
 ]
 
 
+def set_precision_of_graphcis(_d):
+    return np.float16(_d)
+
+
 def recover_acceleration():
-    # accel = AccelModelInertialFrame()
-    fibers_with_length_info = np.array([1, 5, 9, 11])
-    ip_trans = InverseProblem(fibers_with_info=np.array([1, 5, 9, 11]))
-    ip_trans_ang_full = InverseProblem(
-        fibers_with_info=np.arange(1, 13), recover_angular_accel=True, estimation="full"
-    )
-    ip_trans_ang_reduced = InverseProblem(
-        fibers_with_info=np.array([1, 4, 5, 8, 9, 11, 12]),
-        recover_angular_accel=True,
-        estimation="reduced",
-    )
-    ss = SimpleSolution(np.array([1, 5, 9]))
+    # Load test to get parameters
     f = h5py.File(H5PY_FILE_NAME, "a")
     _ff = f[TEST_NAME]
     if "accel_recover" in _ff.keys():
@@ -73,7 +66,10 @@ def recover_acceleration():
         del _ff["ls_solution"]
     fff = _ff.require_group("ls_solution")
     # _delta_time_size_new = int(1e-2 / (_ff["t"][1] - _ff["t"][0]))
-    new_dt = 1e-4
+    if _ff.attrs["dt"] < 1e-4:
+        new_dt = 1e-4
+    else:
+        new_dt = _ff.attrs["dt"]
     _delta_n = int(new_dt / (_ff["t"][1] - _ff["t"][0]))
     _time_size = int(_ff["t"].size * (_ff["t"][1] - _ff["t"][0]) / new_dt)
     print(_delta_n, _time_size)
@@ -81,6 +77,27 @@ def recover_acceleration():
         print("_time_size muito pequeno")
         _delta_n = 1
         _time_size = _ff["t"].size
+
+    fibers_with_length_info = np.array([1, 5, 9, 11])
+    ip_trans = InverseProblem(fibers_with_info=np.array([1, 5, 9, 11]),density=_ff.attrs["density"],fiber_length=_ff.attrs['fiber_length'])
+    ip_trans_ang_full = InverseProblem(
+        fibers_with_info=np.arange(1, 13),
+        recover_angular_accel=True,
+        estimation="full",
+        density=_ff.attrs["density"],
+        fiber_length=_ff.attrs["fiber_length"],
+    )
+    ip_trans_ang_reduced = InverseProblem(
+        fibers_with_info=np.array([1, 4, 5, 8, 9, 11, 12]),
+        recover_angular_accel=True,
+        estimation="reduced",density=_ff.attrs["density"],fiber_length=_ff.attrs['fiber_length']
+    )
+    ss = SimpleSolution(
+        np.array([1, 5, 9]),
+        density=_ff.attrs["density"],
+        fiber_length=_ff.attrs["fiber_length"],
+    )
+
     ff.create_dataset("t", _time_size, dtype=np.float64)
     # Simple methods
     ff.create_dataset("one_fiber", (3, _time_size), dtype=np.float64)
@@ -205,7 +222,7 @@ def plot_recover_acceleration():
     # fig.legend()
     if not ONLY_SHOW:
         plt.savefig(
-            "../tese/images/recover_translational_acceleration_"
+            TESE_FOLDER+"recover_translational_acceleration_"
             + TEST_NAME
             + ".pdf",
             format="pdf",
@@ -223,22 +240,22 @@ def plot_recover_angular_acceleration():
     plt.close(1)
     y_axis_name = [r"$\dot{\omega}_{x}$", r"$\dot{\omega}_{y}$", r"$\dot{\omega}_{z}$"]
     fig, ax = plt.subplots(
-        3,
-        2,
+        nrows=3,
+        ncols=1,
         num=1,
         sharex="col",
         figsize=(FIG_L, FIG_A),
-        gridspec_kw=dict(width_ratios=[1, 0.5], height_ratios=[1, 1, 1]),
+        # gridspec_kw=dict(width_ratios=[1, 0.5], height_ratios=[1, 1, 1]),
     )
     xmin = 600
     xmax = 602
     ymin = 0
     ymax = 0
     for i in range(3):
-        ax[i, 0].set_ylabel(y_axis_name[i])
+        ax[i].set_ylabel(y_axis_name[i])
         # lw = 4
         for j in ["ls_translational_angular_reduced", "ls_translational_angular_full"]:
-            ax[i, 0].plot(
+            ax[i].plot(
                 fff["t"][:] * 1e3,
                 fff[j][i + 3, :],
                 label=fff[j].attrs["method_name"],
@@ -275,7 +292,7 @@ def plot_recover_angular_acceleration():
     # fig.legend()
     if not ONLY_SHOW:
         plt.savefig(
-            "../tese/images/recover_angular_acceleration_" + TEST_NAME + ".pdf",
+            TESE_FOLDER+"recover_angular_acceleration_" + TEST_NAME + ".pdf",
             format="pdf",
         )
         plt.close(fig=1)
@@ -308,7 +325,7 @@ def plot_defromations():
 
     if not ONLY_SHOW:
         plt.savefig(
-            "../tese/images/deformations_" + TEST_NAME + ".pdf", format="pdf"
+            TESE_FOLDER+"deformations_" + TEST_NAME + ".pdf", format="pdf"
         )
         plt.close(fig=3)
     else:
@@ -335,23 +352,23 @@ def plot_inertial_states():
             for col in range(3):
                 ax[lin, col].plot(
                     1e3 * ff["t"][:],
-                    np.float32(ff["x"][ind_x[lin] + col + 5, :]),
+                    set_precision_of_graphcis(ff["x"][ind_x[lin] + col + 5, :]),
                     label=r"$q_{" + str(col + 1) + "}$ Massa sísmica",
                     lw=1.0,
                 )
                 ax[lin, col].plot(
                     1e3 * ff["t"][:],
-                    np.float32(ff["x"][ind_x[lin] + col + 1, :]),
+                    set_precision_of_graphcis(ff["x"][ind_x[lin] + col + 1, :]),
                     label=r"$q_{" + str(col + 1) + "}$ Base",
                 )
             # ax[lin, 0].plot(
             #     1e3 * ff["t"][:],
-            #     np.float32(ff["x"][ind_x[lin] + 4, :]),
+            #     set_precision_of_graphcis(ff["x"][ind_x[lin] + 4, :]),
             #     label=r"$q_{0}$ Massa sísmica",
             # )
             # ax[lin, 0].plot(
             #     1e3 * ff["t"][:],
-            #     np.float32(ff["x"][ind_x[lin], :]),
+            #     set_precision_of_graphcis(ff["x"][ind_x[lin], :]),
             #     label=r"$q_{0}$ Base",
             # )
             # ax[lin, 0].legend()
@@ -359,11 +376,11 @@ def plot_inertial_states():
             for col in range(3):
                 ax[lin, col].plot(
                     1e3 * ff["t"][:],
-                    np.float32(ff["x"][ind_x[lin] + col + 3, :]),
+                    set_precision_of_graphcis(ff["x"][ind_x[lin] + col + 3, :]),
                     lw=1.0,
                 )
                 ax[lin, col].plot(
-                    1e3 * ff["t"][:], np.float32(ff["x"][ind_x[lin] + col, :])
+                    1e3 * ff["t"][:], set_precision_of_graphcis(ff["x"][ind_x[lin] + col, :])
                 )
     ax[0, 2].legend(["Massa sísmica", "Base"])
     # ax[0,1].legend(["Massa sísmica", "Base"],ncols=2, loc="lower left", bbox_to_anchor=(-.50, 1.5,3,1.5),mode="expand")
@@ -372,7 +389,7 @@ def plot_inertial_states():
     # fig.legend()
     if not ONLY_SHOW:
         plt.savefig(
-            "../tese/images/all_states_" + TEST_NAME + ".pdf", format="pdf"
+            TESE_FOLDER+"all_states_" + TEST_NAME + ".pdf", format="pdf"
         )
         plt.close(fig=3)
     else:
@@ -402,7 +419,7 @@ def plot_length_of_fo():
 
     if not ONLY_SHOW:
         plt.savefig(
-            "../tese/images/length_of_fo_" + TEST_NAME + ".pdf", format="pdf"
+            TESE_FOLDER+"length_of_fo_" + TEST_NAME + ".pdf", format="pdf"
         )
         plt.close(fig=2)
     else:
@@ -445,7 +462,7 @@ def plot_ls_solution():
     ax[0].legend()
     if not ONLY_SHOW:
         plt.savefig(
-            "../tese/images/estimated_relative_position_" + TEST_NAME + ".pdf",
+            TESE_FOLDER+"estimated_relative_position_" + TEST_NAME + ".pdf",
             format="pdf",
         )
         plt.close(fig=4)
@@ -502,7 +519,7 @@ def plot_ls_solution():
     ax[0].legend()
     if not ONLY_SHOW:
         plt.savefig(
-            "../tese/images/estimated_relative_orientation_"
+            TESE_FOLDER+"estimated_relative_orientation_"
             + TEST_NAME
             + ".pdf",
             format="pdf",

@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 
 class statesOfSimulation_object(object):
     def __init__(
-        self, dt=1e-5, tf=1.0, hf=h5py.Group, accel=AccelModelInertialFrame()
+        self, dt=1e-5, tf=1.0, hf=h5py.Group, accel=AccelModelInertialFrame
     ) -> None:
         """
         __init__ states of simulation collect all states too simulate
@@ -86,12 +86,11 @@ class statesOfSimulation_object(object):
         self.hf.attrs["k"] = accel.k
         self.hf.attrs["seismic_mass"] = accel.seismic_mass
         self.hf.attrs["fiber_length"] = accel.fiber_length
-
+        self.hf.attrs["density"] = accel.density
 
 if __name__ == "__main__":
-    accel = AccelModelInertialFrame(seismic_edge=0.1,
-        damper_for_computation_simulations=0.0, fiber_length=0.01000000000
-    )
+    accel = AccelModelInertialFrame(seismic_edge=16.3e-3,damper_for_computation_simulations=0.0, fiber_length=6e-3, density=8e3)
+
     hdf5_file = "modeling_data_temp_2.hdf5"
     test_name = "complete_movement"
     # test_name = "translational_movement"
