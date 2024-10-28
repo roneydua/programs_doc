@@ -3,7 +3,11 @@
     "ignorePaths": [],
     "dictionaryDefinitions": [],
     "dictionaries": [],
-    "words": [],
+    "words": [
+        "markerfmt",
+        "setp",
+        "zorder"
+    ],
     "ignoreWords": [],
     "import": []
 }
