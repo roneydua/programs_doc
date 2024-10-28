@@ -10,7 +10,8 @@
         "gpib",
         "iloc",
         "mult",
-        "popen"
+        "popen",
+        "variacao"
     ],
     "path-intellisense.absolutePathTo": "./",
     "jupyter.notebookFileRoot": "${workspaceFolder}/",
