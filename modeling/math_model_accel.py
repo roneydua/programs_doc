@@ -83,6 +83,7 @@ class AccelModelInertialFrame(object):
         self.fiber_diameter =fiber_diameter
         
         self.damper_for_computation_simulations = damper_for_computation_simulations
+        
         # Fiber diameter
         self.fiber_length = fiber_length
         """initial fiber length"""
@@ -160,24 +161,34 @@ class AccelModelInertialFrame(object):
         self.f = 0.0 * self.m_M
         """ Vector f. This vector contains the length of the optical fiber at the current instant."""
         self.leg = [
-            "xz",
-            "x-z",
-            "-xz",
-            "-x-z",
-            "yz",
-            "y-z",
-            "-yz",
-            "-y-z",
-            "xy",
-            "x-y",
-            "-xy",
-            "-x-y",
+            r"$x_{+}z_{+}$",
+            r"$x_{+}z_{-}$",
+            r"$x_{-}z_{+}$",
+            r"$x_{-}z_{-}$",
+            r"$y_{+}z_{+}$",
+            r"$y_{+}z_{-}$",
+            r"$y_{-}z_{+}$",
+            r"$y_{-}z_{-}$",
+            r"$x_{+}y_{+}$",
+            r"$x_{+}y_{-}$",
+            r"$x_{-}y_{+}$",
+            r"$x_{-}y_{-}$",
         ]
+        c_critical = 4.0*np.sqrt(self.k / self.seismic_mass)
+        damping_ratio = 1.0 #zeta 
+        self.damper_for_computation_simulations = c_critical * damping_ratio
         """ undamped natural frequency hz"""
-        self.undamped_natural_frequency_hz = np.sqrt(4*self.k/self.seismic_mass) / (np.pi*2.)
-        print("The natural frequency is %1.1f Hz \t" % self.undamped_natural_frequency_hz)
+        self.undamped_translation_natural_frequency_hz = np.sqrt(4*self.k/self.seismic_mass) / (np.pi*2.)
+        self.undamped_rotational_natural_frequency_hz=np.sqrt(
+            4 * self.k *_d**2/ self.inertial_seismic_mass[0,0]
+        ) / (np.pi * 2.0)
+        print("The natural translational frequency is %1.1f Hz \t" % self.undamped_translation_natural_frequency_hz)
+        print(
+            "The natural rotational frequency is %1.1f Hz \t"
+            % self.undamped_rotational_natural_frequency_hz
+        )
         """ undamped natural frequency hz"""
-        self.minimal_recomendated_time_step = 0.1 / self.undamped_natural_frequency_hz
+        self.minimal_recomendated_time_step = 1 / (10.*self.undamped_translation_natural_frequency_hz)
         print("Is is recomendated that time step of integrator is 10x(1/natural frequency) so %1.0e s \t" % self.minimal_recomendated_time_step)
         # legend of numerical point
 
@@ -365,15 +376,15 @@ class AccelModelInertialFrame(object):
                 -fq.calc_dfdq(qb, self.b_B[i, :]).T @ f_hat_dell[:, i]
             )
         dd_x[:3] = self.k * sum_f_hat_dell / self.base_sensor_mass
-        dd_x[:3] -= (
-            self.damper_for_computation_simulations / self.base_sensor_mass
-        ) * (d_rm - d_rb)
+        # dd_x[:3] += (
+        #     self.damper_for_computation_simulations / self.base_sensor_mass
+        # ) * (d_rm - d_rb)
         # calculate dd_rm
         dd_x[3:6] = -self.k * sum_f_hat_dell / self.seismic_mass
         # dd_x[5] += self.G
         # artificial damper
         dd_x[3:6] -= (self.damper_for_computation_simulations / self.seismic_mass) * (
-            d_rb - d_rm
+            d_rm-d_rb
         )
         # calculate d_rb
         dd_x[6:9] = d_rb
@@ -448,6 +459,7 @@ class InverseProblem(AccelModelInertialFrame):
 
         """
         super().__init__(fiber_length=fiber_length,density=density)
+        print(self.k)
         self.fibers_with_info = fibers_with_info
         self.fibers_with_info_index = fibers_with_info - 1
         self.k_by_m = self.k / self.seismic_mass

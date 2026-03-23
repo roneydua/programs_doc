@@ -14,18 +14,19 @@ import numpy as np
 from IPython.core.interactiveshell import InteractiveShell
 from ipywidgets import fixed, interactive
 from matplotlib import ticker
-from common_functions import *
+from common_functions.generic_functions import *
+from interrogation_analysis.common_functions_bragg_study import *
 
 # InteractiveShell.ast_node_interactivity = "all"
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 my_colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 # plt.style.use("default")
-from bragg import Bragg
+from bragg.bragg import Bragg
 
 plt.style.use("./common_functions/roney3.mplstyle")
 FIG_L = 6.29
 FIG_A = 1.5 * (90.0) / 25.4
-
+TESE_FOLDER = "../tese/images/not_used_on_thesis/"
 
 class InterrogationClass(object):
     """docstring for Transmition."""
@@ -147,324 +148,324 @@ class InterrogationClass(object):
         ax[1].legend()
 
 
-# class Transmition(object):
-#     """docstring for Transmition."""
+class Transmition(object):
+    """docstring for Transmition."""
 
-#     def __init__(self, bragg: Bragg, laser, deformation_vector: np.ndarray):
-#         self.bragg = bragg
-#         self.laser = laser
+    def __init__(self, bragg: Bragg, laser, deformation_vector: np.ndarray):
+        self.bragg = bragg
+        self.laser = laser
 
-#         self.deformation_vector = deformation_vector
-#         self.pot_transmission = calc_pot_transmission(self.bragg,
-#                                                       self.deformation_vector,
-#                                                       self.laser)
+        self.deformation_vector = deformation_vector
+        self.pot_transmission = calc_pot_transmission(self.bragg,
+                                                      self.deformation_vector,
+                                                      self.laser)
 
-#     def transmission(self, deformation=0.0):
-#         fig, ax = plt.subplots(2, 1, sharex=False, figsize=(FIG_L, FIG_A))
-#         ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
-#         ax[0].set_ylabel(r'Refletividade')
-#         ax[0].set_xlabel('$\\lambda, \\si{\\nm}$')
-#         ax[0].set_ylim((0, 1.0))
+    def transmission(self, deformation=0.0):
+        fig, ax = plt.subplots(2, 1, sharex=False, figsize=(FIG_L, FIG_A))
+        ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax[0].set_ylabel(r'Refletividade')
+        ax[0].set_xlabel('$\\lambda, \\si{\\nm}$')
+        ax[0].set_ylim((0, 1.0))
 
-#         ax[1].set_ylabel(r'\si{\micro\watt}')
-#         ax[1].set_xlabel(r'Deformação, \si{\micro\varepsilon}')
-#         # ax[1].set_xlim((1548, 1550))
+        ax[1].set_ylabel(r'\si{\micro\watt}')
+        ax[1].set_xlabel(r'Deformação, \si{\micro\varepsilon}')
+        # ax[1].set_xlim((1548, 1550))
 
-#         ax[0].plot(self.bragg.wavelength_span_nm, (1.0 - self.bragg.r0),
-#                    label="Deformação nula")
-#         ref = self.bragg.calc_bragg(deformation=deformation)
+        ax[0].plot(self.bragg.wavelength_span_nm, (1.0 - self.bragg.r0),
+                   label="Deformação nula")
+        ref = self.bragg.calc_bragg(deformation=deformation)
 
-#         ax[0].plot(self.bragg.wavelength_span_nm, (1. - ref),
-#                    label=r"$\varepsilon=$" + "{:2.2e}".format(deformation))
-#         ax[0].plot(self.bragg.wavelength_span_nm,
-#                    self.laser / self.laser.max(),
-#                    label="Laser")
+        ax[0].plot(self.bragg.wavelength_span_nm, (1. - ref),
+                   label=r"$\varepsilon=$" + "{:2.2e}".format(deformation))
+        ax[0].plot(self.bragg.wavelength_span_nm,
+                   self.laser / self.laser.max(),
+                   label="Laser")
 
-#         photodetector_power = transmission_interrogation(ref,self.laser)
-#         total_protodetector_power = np.trapz(x=self.bragg.wavelength_span,
-#                                              y=photodetector_power)
-#         ax[1].plot(self.deformation_vector * 1e6,
-#                    1e6 * self.pot_transmission,
-#                    label="Potência no fotodetector=" +
-#                    '{:2.4f}'.format(total_protodetector_power * 1e6) +
-#                    r"\si{\micro\watt}")
+        photodetector_power = transmission_interrogation(ref,self.laser)
+        total_protodetector_power = np.trapz(x=self.bragg.wavelength_span,
+                                             y=photodetector_power)
+        ax[1].plot(self.deformation_vector * 1e6,
+                   1e6 * self.pot_transmission,
+                   label="Potência no fotodetector=" +
+                   '{:2.4f}'.format(total_protodetector_power * 1e6) +
+                   r"\si{\micro\watt}")
 
-#         ax[1].plot(deformation * 1e6,
-#                    total_protodetector_power * 1e6,
-#                    'x',
-#                    ms=10)
+        ax[1].plot(deformation * 1e6,
+                   total_protodetector_power * 1e6,
+                   'x',
+                   ms=10)
 
-#         # ax[1].set_yticks([0, 1e-3 * self.pot_transmission.max()])
-#         ax[0].legend()
-#         ax[1].legend()
+        # ax[1].set_yticks([0, 1e-3 * self.pot_transmission.max()])
+        ax[0].legend()
+        ax[1].legend()
 
-# class Reflection(object):
-#     """docstring for Transmition."""
+class Reflection(object):
+    """docstring for Transmition."""
 
-#     def __init__(self, bragg: Bragg, laser):
-#         self.bragg = bragg
-#         self.laser = laser
+    def __init__(self, bragg: Bragg, laser):
+        self.bragg = bragg
+        self.laser = laser
 
-#     def reflection(self, deformation=0.0):
-#         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
-#         ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
-#         ax[0].set_ylabel(r'Refletividade')
-#         ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
-#         ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
-#         ax[1].set_xlim((1547, 1551))
-#         ax[0].set_ylim((0, self.bragg.r0.max()))
-#         ax[0].plot(self.bragg.wavelength_span_nm,
-#                    self.bragg.r0,
-#                    label="Deformação nula")
-#         ref = self.bragg.calc_bragg(deformation=deformation)
+    def reflection(self, deformation=0.0):
+        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
+        ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax[0].set_ylabel(r'Refletividade')
+        ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
+        ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
+        ax[1].set_xlim((1547, 1551))
+        ax[0].set_ylim((0, self.bragg.r0.max()))
+        ax[0].plot(self.bragg.wavelength_span_nm,
+                   self.bragg.r0,
+                   label="Deformação nula")
+        ref = self.bragg.calc_bragg(deformation=deformation)
 
-#         photodetector_power = 0.25 * (ref) * self.laser
-#         total_protodetector_power = np.trapz(x=self.bragg.wavelength_span,
-#                                              y=photodetector_power)
-#         ax[0].plot(self.bragg.wavelength_span_nm,
-#                    ref,
-#                    label=r"$\varepsilon=$" + "{:2.2e}".format(deformation))
-#         ax[0].plot(self.bragg.wavelength_span_nm,
-#                    self.laser / self.laser.max() * self.bragg.r0.max(),
-#                    label="Laser")
-#         ax[1].plot(self.bragg.wavelength_span_nm,
-#                    1e-3 * photodetector_power,
-#                    label="Potência no fotodetector=" +
-#                    '{:2.4f}'.format(total_protodetector_power * 1e6) +
-#                    r"\si{\micro\watt}")
-#         ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
-#         ax[0].legend()
-#         ax[1].legend()
+        photodetector_power = 0.25 * (ref) * self.laser
+        total_protodetector_power = np.trapz(x=self.bragg.wavelength_span,
+                                             y=photodetector_power)
+        ax[0].plot(self.bragg.wavelength_span_nm,
+                   ref,
+                   label=r"$\varepsilon=$" + "{:2.2e}".format(deformation))
+        ax[0].plot(self.bragg.wavelength_span_nm,
+                   self.laser / self.laser.max() * self.bragg.r0.max(),
+                   label="Laser")
+        ax[1].plot(self.bragg.wavelength_span_nm,
+                   1e-3 * photodetector_power,
+                   label="Potência no fotodetector=" +
+                   '{:2.4f}'.format(total_protodetector_power * 1e6) +
+                   r"\si{\micro\watt}")
+        ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
+        ax[0].legend()
+        ax[1].legend()
 
-# class ReflectionReflection(object):
-#     """docstring for Transmition."""
+class ReflectionReflection(object):
+    """docstring for Transmition."""
 
-#     def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
-#         self.bragg1 = bragg1
-#         self.bragg2 = bragg2
-#         self.laser = laser
+    def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
+        self.bragg1 = bragg1
+        self.bragg2 = bragg2
+        self.laser = laser
 
-#     def reflection_reflection(self, deformation=0.0):
-#         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
-#         ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
-#         ax[0].set_ylabel(r'Refletividade')
-#         ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
-#         ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
-#         ax[0].set_ylim((0, self.bragg1.r0.max()))
-#         ax[1].set_xlim((1547, 1551))
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.bragg1.r0,
-#                    color=my_colors[0],
-#                    ls=':',
-#                    label="Deformação nula FBG 1")
-#         ax[0].plot(self.bragg2.wavelength_span_nm,
-#                    self.bragg2.r0,
-#                    color=my_colors[1],
-#                    ls=':',
-#                    label="Deformação nula FBG 2")
-#         ref1 = self.bragg1.calc_bragg(deformation=deformation)
-#         ref2 = self.bragg2.calc_bragg(
-#             deformation=-deformation,
-#             wavelength_vector=self.bragg1.wavelength_span)
+    def reflection_reflection(self, deformation=0.0):
+        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
+        ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax[0].set_ylabel(r'Refletividade')
+        ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
+        ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
+        ax[0].set_ylim((0, self.bragg1.r0.max()))
+        ax[1].set_xlim((1547, 1551))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.bragg1.r0,
+                   color=my_colors[0],
+                   ls=':',
+                   label="Deformação nula FBG 1")
+        ax[0].plot(self.bragg2.wavelength_span_nm,
+                   self.bragg2.r0,
+                   color=my_colors[1],
+                   ls=':',
+                   label="Deformação nula FBG 2")
+        ref1 = self.bragg1.calc_bragg(deformation=deformation)
+        ref2 = self.bragg2.calc_bragg(
+            deformation=-deformation,
+            wavelength_vector=self.bragg1.wavelength_span)
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref1,
-#                    color=my_colors[0],
-#                    label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref1,
+                   color=my_colors[0],
+                   label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref2,
-#                    color=my_colors[1],
-#                    label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref2,
+                   color=my_colors[1],
+                   label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.laser / self.laser.max() * self.bragg1.r0.max(),
-#                    label="Laser")
-#         photodetector_power = 1.0 / 16.0 * (ref1 * ref2) * self.laser
-#         total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
-#                                              y=photodetector_power)
-#         ax[1].plot(self.bragg1.wavelength_span_nm,
-#                    1e-3 * photodetector_power,
-#                    label="Potência no fotodetector=" +
-#                    '{:2.4f}'.format(total_protodetector_power * 1e6) +
-#                    r"\si{\micro\watt}")
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.laser / self.laser.max() * self.bragg1.r0.max(),
+                   label="Laser")
+        photodetector_power = 1.0 / 16.0 * (ref1 * ref2) * self.laser
+        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+                                             y=photodetector_power)
+        ax[1].plot(self.bragg1.wavelength_span_nm,
+                   1e-3 * photodetector_power,
+                   label="Potência no fotodetector=" +
+                   '{:2.4f}'.format(total_protodetector_power * 1e6) +
+                   r"\si{\micro\watt}")
 
-#         ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
-#         ax[0].legend()
-#         ax[1].legend()
+        ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
+        ax[0].legend()
+        ax[1].legend()
 
-# class TransmissionTransmission(object):
-#     """docstring for Transmition."""
+class TransmissionTransmission(object):
+    """docstring for Transmition."""
 
-#     def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
-#         self.bragg1 = bragg1
-#         self.bragg2 = bragg2
-#         self.laser = laser
+    def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
+        self.bragg1 = bragg1
+        self.bragg2 = bragg2
+        self.laser = laser
 
-#     def transmission_transmission(self, deformation=0.0):
-#         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
-#         ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
+    def transmission_transmission(self, deformation=0.0):
+        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
+        ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
 
-#         ax[0].set_ylabel(r'Refletividade')
-#         ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
-#         ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
-#         ax[0].set_ylim((0, self.bragg1.r0.max()))
-#         ax[1].set_xlim((1547, 1551))
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.bragg1.r0,
-#                    color=my_colors[0],
-#                    ls=':',
-#                    label="Deformação nula FBG 1")
-#         ax[0].plot(self.bragg2.wavelength_span_nm,
-#                    self.bragg2.r0,
-#                    color=my_colors[1],
-#                    ls=':',
-#                    label="Deformação nula FBG 2")
-#         ref1 = self.bragg1.calc_bragg(deformation=deformation)
-#         ref2 = self.bragg2.calc_bragg(
-#             deformation=-deformation,
-#             wavelength_vector=self.bragg1.wavelength_span)
+        ax[0].set_ylabel(r'Refletividade')
+        ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
+        ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
+        ax[0].set_ylim((0, self.bragg1.r0.max()))
+        ax[1].set_xlim((1547, 1551))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.bragg1.r0,
+                   color=my_colors[0],
+                   ls=':',
+                   label="Deformação nula FBG 1")
+        ax[0].plot(self.bragg2.wavelength_span_nm,
+                   self.bragg2.r0,
+                   color=my_colors[1],
+                   ls=':',
+                   label="Deformação nula FBG 2")
+        ref1 = self.bragg1.calc_bragg(deformation=deformation)
+        ref2 = self.bragg2.calc_bragg(
+            deformation=-deformation,
+            wavelength_vector=self.bragg1.wavelength_span)
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref1,
-#                    color=my_colors[0],
-#                    label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref1,
+                   color=my_colors[0],
+                   label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref2,
-#                    color=my_colors[1],
-#                    label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref2,
+                   color=my_colors[1],
+                   label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.laser / self.laser.max() * self.bragg1.r0.max(),
-#                    label="Laser")
-#         ax[0].legend()
-#         photodetector_power = (1.0 - ref1) * (1.0 - ref2) * self.laser
-#         total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
-#                                              y=photodetector_power)
-#         ax[1].plot(self.bragg1.wavelength_span_nm,
-#                    1e-3 * photodetector_power,
-#                    label="Potência no fotodetector=" +
-#                    '{:2.4f}'.format(total_protodetector_power * 1e6) +
-#                    r"\si{\micro\watt}")
-#         # ax[1].set_ylim([0, photodetector_power.max()],)
-#         ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
-#         ax[1].legend()
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.laser / self.laser.max() * self.bragg1.r0.max(),
+                   label="Laser")
+        ax[0].legend()
+        photodetector_power = (1.0 - ref1) * (1.0 - ref2) * self.laser
+        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+                                             y=photodetector_power)
+        ax[1].plot(self.bragg1.wavelength_span_nm,
+                   1e-3 * photodetector_power,
+                   label="Potência no fotodetector=" +
+                   '{:2.4f}'.format(total_protodetector_power * 1e6) +
+                   r"\si{\micro\watt}")
+        # ax[1].set_ylim([0, photodetector_power.max()],)
+        ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
+        ax[1].legend()
 
-# class ReflectionTransmission(object):
-#     """docstring for Transmition."""
+class ReflectionTransmission(object):
+    """docstring for Transmition."""
 
-#     def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
-#         self.bragg1 = bragg1
-#         self.bragg2 = bragg2
-#         self.laser = laser
+    def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
+        self.bragg1 = bragg1
+        self.bragg2 = bragg2
+        self.laser = laser
 
-#     def reflection_transmission(self, deformation=0.0):
-#         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
-#         ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
+    def reflection_transmission(self, deformation=0.0):
+        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
+        ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
 
-#         ax[0].set_ylabel(r'Refletividade')
-#         ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
-#         ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
-#         ax[0].set_ylim((0, self.bragg1.r0.max()))
-#         ax[1].set_xlim((1547, 1551))
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.bragg1.r0,
-#                    color=my_colors[0],
-#                    ls=':',
-#                    label="Deformação nula FBG 1")
-#         ax[0].plot(self.bragg2.wavelength_span_nm,
-#                    self.bragg2.r0,
-#                    color=my_colors[1],
-#                    ls=':',
-#                    label="Deformação nula FBG 2")
-#         ref1 = self.bragg1.calc_bragg(deformation=deformation)
-#         ref2 = self.bragg2.calc_bragg(
-#             deformation=-deformation,
-#             wavelength_vector=self.bragg1.wavelength_span)
+        ax[0].set_ylabel(r'Refletividade')
+        ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
+        ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
+        ax[0].set_ylim((0, self.bragg1.r0.max()))
+        ax[1].set_xlim((1547, 1551))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.bragg1.r0,
+                   color=my_colors[0],
+                   ls=':',
+                   label="Deformação nula FBG 1")
+        ax[0].plot(self.bragg2.wavelength_span_nm,
+                   self.bragg2.r0,
+                   color=my_colors[1],
+                   ls=':',
+                   label="Deformação nula FBG 2")
+        ref1 = self.bragg1.calc_bragg(deformation=deformation)
+        ref2 = self.bragg2.calc_bragg(
+            deformation=-deformation,
+            wavelength_vector=self.bragg1.wavelength_span)
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref1,
-#                    color=my_colors[0],
-#                    label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref1,
+                   color=my_colors[0],
+                   label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref2,
-#                    color=my_colors[1],
-#                    label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref2,
+                   color=my_colors[1],
+                   label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.laser / self.laser.max() * self.bragg1.r0.max(),
-#                    label="Laser")
-#         ax[0].legend()
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.laser / self.laser.max() * self.bragg1.r0.max(),
+                   label="Laser")
+        ax[0].legend()
 
-#         photodetector_power = 0.25 * ref2 * (1.0 - ref1) * self.laser
-#         total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
-#                                              y=photodetector_power)
-#         ax[1].plot(self.bragg1.wavelength_span_nm,
-#                    1e-3 * photodetector_power,
-#                    label="Potência no fotodetector=" +
-#                    '{:2.4f}'.format(total_protodetector_power * 1e6) +
-#                    r"\si{\micro\watt}")
-#         # ax[1].set_ylim([0, photodetector_power.max()],)
-#         ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
-#         ax[1].legend()
+        photodetector_power = 0.25 * ref2 * (1.0 - ref1) * self.laser
+        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+                                             y=photodetector_power)
+        ax[1].plot(self.bragg1.wavelength_span_nm,
+                   1e-3 * photodetector_power,
+                   label="Potência no fotodetector=" +
+                   '{:2.4f}'.format(total_protodetector_power * 1e6) +
+                   r"\si{\micro\watt}")
+        # ax[1].set_ylim([0, photodetector_power.max()],)
+        ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
+        ax[1].legend()
 
-# class TransmissionReflection(object):
-#     """docstring for Transmition."""
+class TransmissionReflection(object):
+    """docstring for Transmition."""
 
-#     def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
-#         self.bragg1 = bragg1
-#         self.bragg2 = bragg2
-#         self.laser = laser
+    def __init__(self, bragg1: Bragg, bragg2: Bragg, laser: np.ndarray):
+        self.bragg1 = bragg1
+        self.bragg2 = bragg2
+        self.laser = laser
 
-#     def transmission_reflection(self, deformation=0.0):
-#         fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
-#         ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
+    def transmission_reflection(self, deformation=0.0):
+        fig, ax = plt.subplots(2, 1, sharex=True, figsize=(FIG_L, FIG_A))
+        ax[0].xaxis.set_major_locator(ticker.MultipleLocator(1))
 
-#         ax[0].set_ylabel(r'Refletividade')
-#         ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
-#         ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
-#         ax[0].set_ylim((0, self.bragg1.r0.max()))
-#         ax[1].set_xlim((1547, 1551))
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.bragg1.r0,
-#                    color=my_colors[0],
-#                    ls=':',
-#                    label="Deformação nula FBG 1")
-#         ax[0].plot(self.bragg2.wavelength_span_nm,
-#                    self.bragg2.r0,
-#                    color=my_colors[1],
-#                    ls=':',
-#                    label="Deformação nula FBG 2")
-#         ref1 = self.bragg1.calc_bragg(deformation=deformation)
-#         ref2 = self.bragg2.calc_bragg(
-#             deformation=-deformation,
-#             wavelength_vector=self.bragg1.wavelength_span)
+        ax[0].set_ylabel(r'Refletividade')
+        ax[1].set_ylabel(r'\si{\milli\watt\per\meter}')
+        ax[1].set_xlabel(r'$\lambda, \si{\nm}$')
+        ax[0].set_ylim((0, self.bragg1.r0.max()))
+        ax[1].set_xlim((1547, 1551))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.bragg1.r0,
+                   color=my_colors[0],
+                   ls=':',
+                   label="Deformação nula FBG 1")
+        ax[0].plot(self.bragg2.wavelength_span_nm,
+                   self.bragg2.r0,
+                   color=my_colors[1],
+                   ls=':',
+                   label="Deformação nula FBG 2")
+        ref1 = self.bragg1.calc_bragg(deformation=deformation)
+        ref2 = self.bragg2.calc_bragg(
+            deformation=-deformation,
+            wavelength_vector=self.bragg1.wavelength_span)
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref1,
-#                    color=my_colors[0],
-#                    label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref1,
+                   color=my_colors[0],
+                   label=r"$\varepsilon_1=$" + "{:2.2e}".format(deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    ref2,
-#                    color=my_colors[1],
-#                    label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   ref2,
+                   color=my_colors[1],
+                   label=r"$\varepsilon_2=$" + "{:2.2e}".format(-deformation))
 
-#         ax[0].plot(self.bragg1.wavelength_span_nm,
-#                    self.laser / self.laser.max() * self.bragg1.r0.max(),
-#                    label="Laser")
-#         ax[0].legend()
+        ax[0].plot(self.bragg1.wavelength_span_nm,
+                   self.laser / self.laser.max() * self.bragg1.r0.max(),
+                   label="Laser")
+        ax[0].legend()
 
-#         photodetector_power = 0.25 * (1.0 - ref2) * ref1 * self.laser
-#         total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
-#                                              y=photodetector_power)
-#         ax[1].plot(self.bragg1.wavelength_span_nm,
-#                    1e-3 * photodetector_power,
-#                    label="Potência no fotodetector=" +
-#                    '{:2.4f}'.format(total_protodetector_power * 1e6) +
-#                    r"\si{\micro\watt}")
-#         # ax[1].set_ylim([0, photodetector_power.max()],)
-#         ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
-#         ax[1].legend()
+        photodetector_power = 0.25 * (1.0 - ref2) * ref1 * self.laser
+        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+                                             y=photodetector_power)
+        ax[1].plot(self.bragg1.wavelength_span_nm,
+                   1e-3 * photodetector_power,
+                   label="Potência no fotodetector=" +
+                   '{:2.4f}'.format(total_protodetector_power * 1e6) +
+                   r"\si{\micro\watt}")
+        # ax[1].set_ylim([0, photodetector_power.max()],)
+        ax[1].set_yticks([0, 1e-3 * photodetector_power.max()])
+        ax[1].legend()

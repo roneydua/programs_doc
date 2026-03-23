@@ -14,7 +14,7 @@ from IPython.core.interactiveshell import InteractiveShell
 from ipywidgets import fixed, interactive
 from matplotlib import ticker
 
-from bragg import Bragg
+from bragg.bragg import Bragg
 
 FIG_L = 6.29
 FIG_A = (90.0) / 25.4

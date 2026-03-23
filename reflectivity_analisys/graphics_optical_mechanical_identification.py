@@ -7,6 +7,7 @@
 @Contact :   roneyddasilva@gmail.com
 """
 
+from pydoc import text
 from modeling.math_model_accel import AccelModelInertialFrame
 import locale
 
@@ -19,8 +20,11 @@ from scipy.linalg import eig
 
 from common_functions.generic_functions import *
 
-locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+# locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 plt.style.use("./common_functions/roney3.mplstyle")
+
+TESE_FOLDER = "../tese/images/not_used_on_thesis/"
+
 my_colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 # plt.style.use("default")
 FIG_L = 6.29
@@ -82,9 +86,9 @@ def plot_colleted_data_fbg_6():
     ax.legend(ncol=6, bbox_to_anchor=(0, 1, 1, 0), loc="lower left", mode="expand")
     ax.set_xlabel(r"$\lambda\,[\unit{\nm}]$")
     ax.set_ylabel(r"Potência óptica [$\unit{\dbm\per\nm}$]")
-    plt.savefig("../tese/images/plot_colleted_data_fbg_6.pdf", format="pdf")
+    plt.savefig(TESE_FOLDER+"plot_colleted_data_fbg_6.pdf", format="pdf")
     plt.close(fig=1)
-    f.close()
+    _f.close()
 
 
 def plot_reflectivity_of_colleted_data_fbg_6():
@@ -126,7 +130,7 @@ def plot_reflectivity_of_colleted_data_fbg_6():
     ax.set_xlabel(r"$\lambda\,[\unit{\nm}]$")
     ax.set_ylabel(r"\text{r}\,[$\unit{\percent}$]")
     plt.savefig(
-        "../tese/images/plot_reflectivity_of_colleted_data_fbg_6.pdf",
+        TESE_FOLDER+"plot_reflectivity_of_colleted_data_fbg_6.pdf",
         format="pdf",
     )
     plt.close(fig=1)
@@ -210,7 +214,7 @@ def plot_reflectivity_of_colleted_data_fbg_6_zero_strain():
     ax.set_ylabel(r"\text{r}\,[$\unit{\percent}$]")
 
     plt.savefig(
-        "../tese/images/plot_reflectivity_of_colleted_data_fbg_6_zero_strain.pdf",
+        TESE_FOLDER+"plot_reflectivity_of_colleted_data_fbg_6_zero_strain.pdf",
         format="pdf",
     )
     plt.close(fig=1)
@@ -336,20 +340,20 @@ def identification_method_examples():
     r = f["fbg_6_001/reflectivity"][:]
 
     fig, ax = plt.subplots(1, 1, num=1, figsize=(FIG_L, 0.75 * FIG_A))
-    ax.plot(w, pi, label="$\mathbf{p}_{\mathrm{I}}$")
-    ax.plot(w, mW_dbm(dbm_mW(dbm=pi) * 0.5), label="$\mathbf{p}_{\mathrm{II}}$")
+    ax.plot(w, pi, label=r"$\mathbf{p}_{\mathrm{I}}$")
+    ax.plot(w, mW_dbm(dbm_mW(dbm=pi) * 0.5), label=r"$\mathbf{p}_{\mathrm{II}}$")
     reflected_spectrum = r * dbm_mW(dbm=pi) * 0.5
     reflected_reference = dbm_mW(dbm=pi) * 0.5 * 0.04
-    ax.plot(w, mW_dbm(reflected_spectrum * 0.5), label="$\mathbf{p}_{\mathrm{r}}$")
+    ax.plot(w, mW_dbm(reflected_spectrum * 0.5), label=r"$\mathbf{p}_{\mathrm{r}}$")
     ax.plot(
         w,
         mW_dbm((reflected_spectrum + reflected_reference) * 0.5),
-        label="$\mathbf{p}_{\mathrm{r^{\prime}}}$ (Método 1)",
+        label=r"$\mathbf{p}_{\mathrm{r^{\prime}}}$ (Método 1)",
     )
     ax.plot(
         w,
         mW_dbm((reflected_reference) * 0.5),
-        label="$\mathbf{p}_{\mathrm{r^{\prime}}}$ (Método 2)",
+        label=r"$\mathbf{p}_{\mathrm{r^{\prime}}}$ (Método 2)",
     )
 
     ax.set_xlim(1520, 1560)
@@ -358,7 +362,7 @@ def identification_method_examples():
     ax.set_xlabel(r"$\lambda\,[\unit{\nm}]$")
     ax.set_ylabel(r"Potência óptica [\unit{\dbm}]")
     plt.savefig(
-        "../tese/images/identification_method_examples.pdf",
+        TESE_FOLDER+"identification_method_examples.pdf",
         format="pdf",
     )
     plt.close(fig=1)
@@ -369,38 +373,53 @@ def identification_method_examples():
     pii = f["fbg_6_001/power_dbm"][:]
 
     fig, ax = plt.subplots(1, 1, num=1, figsize=(FIG_L, 0.75 * FIG_A))
-    ax.plot(w, pi, label="$\mathbf{p}_{\mathrm{I}}$")
-    ax.plot(w, pii, label="$\mathbf{p}_{\mathrm{II}}$")
+    ax.plot(w, pi, label=r"$\mathbf{p}_{\mathrm{I}}$")
+    ax.plot(w, pii, label=r"$\mathbf{p}_{\mathrm{II}}$")
     ax.set_xlim(1520, 1560)
     ax.legend(ncols=2)
     ax.set_ylim(bottom=-45)
     ax.set_xlabel(r"$\lambda\,[\unit{\nm}]$")
     ax.set_ylabel(r"Potência óptica [\unit{\dbm}]")
     plt.savefig(
-        "../tese/images/identification_method_examples_2.pdf",
+        TESE_FOLDER+"identification_method_examples_2.pdf",
         format="pdf",
     )
     plt.close(fig=1)
-    f.close()
 
 
-def plot_time_elapsed_fbg_production():
+def plot_time_elapsed_fbg_production(language:str):
     f = h5py.File("./production_files.hdf5", "r")["fbg_production/20240328/fbg2"]
     w = f["wavelength_m"][:]
     pi = f["optical_power_dbm"][:]
     r = f["reflectivity"][:]
-    fig.clear()
+    texts_defs  = {
+        "en":{
+            'power_dmb':"Optical Power [dBm]",
+            'reflectivity':"Reflectivity",
+            "locale": "en_US.UTF-8",
+        },
+        "pt":{
+            'power_dmb':"Potência óptica [dBm]",
+            'reflectivity':"Refletividade",
+            "locale": "pt_BR.UTF-8",
+        }
+    }
+    texts = texts_defs[language]
+    locale.setlocale(category=locale.LC_ALL,locale=texts["locale"])
+    print(texts["locale"])
+    if plt.fignum_exists(1):
+        plot.close('all')
     fig, ax = plt.subplots(2, 1, num=1, sharex=True, figsize=(FIG_L, FIG_A))
     alpha_line = np.linspace(0, 1, 9,endpoint=True)
     for i in range(0, 17, 2):
         ax[0].plot(w*1e9, pi[:, i], "-", color=my_colors[0], alpha=alpha_line[i//2])
         ax[1].plot(w * 1e9, r[:, i], "-", color=my_colors[0], alpha=alpha_line[i // 2])
     # ax.set_ylim(bottom=-45)
-    ax[0].set_ylabel(r"Potência óptica [\unit{\dbm}]")
-    ax[1].set_ylabel(r"Refletividade")
+    ax[0].set_ylabel(texts['power_dmb'])
+    ax[1].set_ylabel(texts['reflectivity'])
     ax[1].set_xlabel(r"$\lambda\,[\unit{\nm}]$")
     plt.savefig(
-        "../tese/images/plot_time_elapsed_fbg_production.pdf",
+        TESE_FOLDER+"plot_time_elapsed_fbg_production_"+language+".pdf",
         format="pdf",
     )
     plt.close(1)

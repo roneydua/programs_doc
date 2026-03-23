@@ -19,11 +19,53 @@ from common_functions import QuatSymbolic
 import scipy.sparse.linalg as la
 
 accel = AccelModelInertialFrame()
-m_M = sp.Matrix(accel.m_M)
-b_B = sp.Matrix(accel.b_B)
+_e = sp.Symbol(r"\ell_{m}")#self.seismic_edge / 2.0
+_d = sp.Symbol(r"e_m") #self.seismic_edge / 2.0 - 1e-3
+_m_M = np.array(
+    [
+        [_e, _d, 0.0],  # X+ GRADE
+        [_e, -_d, 0.0],
+        [-_e, _d, 0.0],
+        [-_e, -_d, 0.0],  # X GRADE
+        [0.0, _e, _d],  # Y
+        [0.0, _e, -_d],  # Y+ GRADE
+        [0.0, -_e, _d],  # Y- GRADE
+        [0.0, -_e, -_d],
+        [_d, 0, _e],
+        [-_d, 0, _e],  # Z+ grade
+        [_d, 0, -_e],  # Z- grade
+        [-_d, 0, -_e],
+    ]
+)
+
+"""Connections in the seismic mass """
+l = sp.Symbol(r"\ell", real=True)
+_f = sp.Symbol(r"\ell_{m}")+l#self.base_sensor_edge / 2.0
+_b_B = np.array(
+    [
+        [_f, _d, 0.0],  # X
+        [_f, -_d, 0.0],
+        [-_f, _d, 0.0],
+        [-_f, -_d, 0.0],
+        [0.0, _f, _d],  # Y
+        [0.0, _f, -_d],
+        [0.0, -_f, _d],
+        [0.0, -_f, -_d],
+        [_d, 0, _f],
+        [-_d, 0, _f],
+        [_d, 0, -_f],
+        [-_d, 0, -_f],
+    ]
+)
+
+
+m_M = sp.Matrix(_m_M)
+b_B = sp.Matrix(_b_B)
+
+# m_M = sp.Matrix(accel.m_M)
+# b_B = sp.Matrix(accel.b_B)
 r = sp.Matrix([sp.Symbol(r"r_x"), sp.Symbol(r"r_y"), sp.Symbol(r"r_z")])
 q = QuatSymbolic.QuaternionSymbolic(sub="M")
-l = sp.Symbol(r"\ell", real=True)
 
 
 def calc_f(index: int):
@@ -31,7 +73,7 @@ def calc_f(index: int):
     Returns:
         The vector f on point j
     """
-    return r + q.quatRot().T @ m_M[index, :].T - b_B[index, :].T
+    return r + q.quat_rot().T @ m_M[index, :].T - b_B[index, :].T
 
 
 def calc_dl(f_i: sp.matrices.dense.MutableDenseMatrix):
@@ -84,7 +126,7 @@ def calc_function_on_operation_point(_f):
         )
     return linear_matrix
 
-
+# Calculate the derivatives
 linear_matrix_linear_acceleration_r_r = calc_function_on_operation_point(derivative_r)
 """ linearized linear acceleration"""
 
@@ -94,8 +136,6 @@ linear_matrix_linear_acceleration_r_q = calc_function_on_operation_point(derivat
 
 
 ## Angular analysis
-
-
 r_dd_a = 0.0 * r
 """ Angular acceleration function"""
 
@@ -139,11 +179,11 @@ for i in range(12):
         * f_i
         / sp.sqrt((f_i.T @ f_i)[0])
     )
-
+# derivative of omega dot with respect to position
 derivative_q_r = calc_jacobian(r_dd_a, r)
 linear_matrix_linear_acceleration_q_r = calc_function_on_operation_point(derivative_q_r)
 
-
+# derivative of omega dot with respect to quaterion
 derivative_q_q = calc_jacobian(r_dd_a, q.quat)
 linear_matrix_angular_acceleration_q_q = calc_function_on_operation_point(
     derivative_q_q
@@ -157,11 +197,13 @@ for i in range(12):
         q.Q().T
         @ calc_dfdq(q, m_M[i, :])
         @ fi
-        @ (-calc_dfdq(q, m_M[i, :]) @ fi).T
+        @ (calc_dfdq(q, m_M[i, :]) @ fi).T
         / l**2
     )
-
-calc_function_on_operation_point(linear_matrix)
+# derivative of omega dot with respect to quaterion
+linear_matrix_angular_acceleration_q_q = calc_function_on_operation_point(
+    linear_matrix
+)
 
 mat_K = sp.zeros(6, 6)
 
@@ -186,7 +228,38 @@ d = np.linalg.inv(mat_m_global) @ mat_k_global
 # 1.0/(np.sqrt(scipy.linalg.eig(d)[0]) / (2 * np.pi))
 
 
-np.sqrt(0.5 * 0.00082944 * accel.k / accel.inertial_seismic_mass[0,0])
+np.sqrt(0.5 * 0.00082944 * accel.k / accel.inertial_seismic_mass[0, 0]) / (np.pi * 2)
 np.sqrt(4* accel.k / accel.seismic_mass)/(np.pi*2)
 
 np.eye(4,3,k=-1).T
+mat_temp = np.zeros((3,4))
+mat_temp[:,1:] = np.eye(3)
+# numerical analysis
+_e = (accel.seismic_edge/2-1e-3)
+
+mat_linear = np.zeros((13,13))
+mat_linear[:3,3:6] = np.eye(3) 
+mat_linear[3:6, :3] = 4.0 * accel.k / accel.seismic_mass * np.eye(3)
+mat_linear[7:10,10:] = .5*np.eye(3)
+mat_linear[10:,7:10] = 8*accel.k*_e**2*accel.inertial_seismic_mass_inv
+
+np.linalg.eig(mat_linear).eigenvalues / (np.pi * 2)
+
+
+np.sqrt(4.0 * accel.k / accel.seismic_mass) / (np.pi * 2)
+
+
+mat_mass = np.zeros((6, 6))
+mat_stiffness = np.zeros((12, 12))
+
+mat_linear[:3, 3:6] = np.eye(3)
+mat_linear[3:6, :3] = 4.0 * accel.k / accel.seismic_mass*np.eye(3)
+mat_linear[6:9, 9:] = 0.5 * np.eye(3)
+mat_linear[10:, 6:9] = 8 * accel.k * _e**2 * accel.inertial_seismic_mass_inv
+mat_linear
+np.linalg.eig(mat_linear).eigenvalues / (2.0 * np.pi)
+
+AA = np.array([[0,1],[4*accel.k/accel.seismic_mass,0]])
+
+np.linalg.eig(AA).eigenvalues/(2.0*np.pi)
+print(np.array(mat_linear,dtype=np.float32))

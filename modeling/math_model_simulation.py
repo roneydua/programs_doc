@@ -11,15 +11,13 @@ import numpy as np
 from tqdm import tqdm
 import h5py
 import pandas as pd
-from modeling.math_model_accel import (
-    AccelModelInertialFrame,
-)
+from modeling.math_model_accel import AccelModelInertialFrame
 from modeling.trajectories import Trajectory
 from common_functions.RK import RungeKutta
 from scipy.integrate import solve_ivp
 from common_functions import quaternion_functions as fq
-
-import matplotlib.pyplot as plt
+import argparse
+import modeling.inverse_problem_solution as ips
 
 
 class statesOfSimulation_object(object):
@@ -88,22 +86,42 @@ class statesOfSimulation_object(object):
         self.hf.attrs["fiber_length"] = accel.fiber_length
         self.hf.attrs["density"] = accel.density
 
-if __name__ == "__main__":
-    accel = AccelModelInertialFrame(seismic_edge=16.3e-3,damper_for_computation_simulations=0.0, fiber_length=6e-3, density=8e3)
-
-    hdf5_file = "modeling_data_temp_2.hdf5"
-    test_name = "complete_movement"
+def main():
+    # parse = argparse.ArgumentParser(description="Makes the sensor dynamics simulation")
+    # parse.add_argument(
+    #     "-t",
+    #     "--test_name",
+    #     choices=[
+    #         "step_response",
+    #         "complete_movement",
+    #         "translational_movement",
+    #         "angular_movement",
+    #     ],
+    #     help="type of test",
+    # )
+    # parse.add_argument(
+    #     "-f",
+    #     "--file_name",
+    #     help="name of hdf5 file to save data",
+    # )
+    # args = parse.parse_args()
+    # print("teste name ",args.test_name, "file name of hdf5 ",args.file_name)
+    hdf5_file = 'temp_file_model_damped.hdf5'
     # test_name = "translational_movement"
     # test_name = "angular_movement"
-    f = h5py.File(hdf5_file, "a")
+    test_name = 'complete_movement'
+
+    accel = AccelModelInertialFrame(seismic_edge=16.3e-3,damper_for_computation_simulations=.01, fiber_length=6e-3, density=8e3)
+
+    f = h5py.File(name=hdf5_file, mode="a", driver="core")#, backing_store=False)
     if test_name in f.keys():
         del f[test_name]
     ff = f.require_group(test_name)
-    s = statesOfSimulation_object(tf=10, dt=1e-3, hf=ff, accel=accel)
-    traj = Trajectory(s.hf["t"][:], test=test_name)
+    s = statesOfSimulation_object(tf=1.0, dt=1e-5, hf=ff, accel=accel)
+    traj = Trajectory(time_vector=s.hf["t"][:], test=test_name)
     # traj.plot_trajectories()
 
-    # RK = RungeKutta(s.hf["x"].shape[0], accel.func_dd_x)
+    RK = RungeKutta(s.hf["x"].shape[0], accel.func_dd_x)
     # initial conditions for all quaternions as [1, 0, 0, 0]
     # initial misalignment
     s.hf["x"][12:16, 0] = traj.q_b_i[:, 0]
@@ -114,7 +132,7 @@ if __name__ == "__main__":
 
     s.hf["x"][6:9, 0] = traj.position_vector_i[:, 0]  # body position
     s.hf["x"][9:12, 0] = traj.position_vector_i[:, 0]  # seismic mass position
-
+    # s.hf["x"][11-2, 0] = 1e-6
     s.hf["x"][20:23, 0] = traj.angular_velocity_vector_b[:, 0]
     s.hf["x"][23:, 0] = traj.angular_velocity_vector_b[:, 0]
 
@@ -137,34 +155,30 @@ if __name__ == "__main__":
         p=fq.conj(accel.bss.q), q=accel.sms.q
     )
     s.hf["true_relative_position"][:, 0] = (
-        fq.rotationMatrix(s.hf["x"][12:16, 0]).T @ accel.sms.r - accel.bss.r
+        fq.rotationMatrix(s.hf["x"][12:16, 0]).T @ (accel.sms.r - accel.bss.r)
     )
     # if s.hf["true_relative_orientation"][0, 0] < 0.1:
     #     s.hf["true_relative_orientation"][:, 0] *= -1
     for i in tqdm(range(s.hf["t"].size - 1)):
         # integration of states
-        # s.hf["x"][:, i + 1] = RK.integrates_states(
-        #     s.hf["x"][:, i], h=s.hf.attrs["dt"]
-        # )
-        solution = solve_ivp(
-            accel.func_dd_x,
-            t_span=(s.hf["t"][i], s.hf["t"][i + 1]),
-            y0=s.hf["x"][:, i],
-            # method="RK23",
-            # method="DOP853",
-            method="RK45",
-            # rtol=1e-10,
-            # atol=1e-10,
-            # start_step=1e-11,
-            # max_step=1e-6,
-            # dense_output=True,
+        s.hf["x"][:, i + 1] = RK.integrates_states(
+            s.hf["x"][:, i], h=s.hf.attrs["dt"]
         )
-
-        s.hf["x"][:, i + 1] = solution.y[:, -1]
-        # s.hf["x"][:, i + 1] = s.hf["x"][:, i] + s.hf.attrs["dt"] * accel.func_dd_x(
-        #     0, s.hf["x"][:, i]
+        # solution = solve_ivp(
+        #     accel.func_dd_x,
+        #     t_span=(s.hf["t"][i], s.hf["t"][i + 1]),
+        #     y0=s.hf["x"][:, i],
+        #     # method="RK23",
+        #     # method="DOP853",
+        #     method="RK45",
+        #     # rtol=1e-10,
+        #     # atol=1e-10,
+        #     # start_step=1e-11,
+        #     # max_step=1e-6,
+        #     # dense_output=True,
         # )
 
+        # s.hf["x"][:, i + 1] = solution.y[:, -1]
         # Put the body in specific trajectories
         s.hf["x"][:3, i + 1] = traj.velocity_vector_i[:, i + 1]
         s.hf["x"][6:9, i + 1] = traj.position_vector_i[:, i + 1]
@@ -180,7 +194,7 @@ if __name__ == "__main__":
         # )
         # quaternion normalize
         # s.hf["x"][12:16, i + 1] /= np.linalg.norm(s.hf["x"][12:16, i + 1])
-        s.hf["x"][16:20, i + 1] /= np.linalg.norm(s.hf["x"][16:20, i + 1])
+        # s.hf["x"][16:20, i + 1] /= np.linalg.norm(s.hf["x"][16:20, i + 1])
         # # update class structs to compute f vectors
         accel.update_states(
             rb=s.hf["x"][6:9, i + 1],
@@ -204,3 +218,12 @@ if __name__ == "__main__":
         #     s.hf["true_relative_orientation"][:, i + 1] *= -1.0
 
     f.close()
+    # make inverse problem and plot graphics
+    ips.main(_test_name=test_name,_h5py_file_name=hdf5_file)
+
+
+if __name__ == "__main__":
+
+    
+    # print(parse.print_help())
+    main()

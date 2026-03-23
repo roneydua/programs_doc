@@ -30,7 +30,7 @@ class Trajectory(object):
         self.position_vector_i = np.zeros((3, self.n))
         """ inertial position """
         self.q_b_i = np.zeros((4, self.n))
-        self.q_b_i[:, 0] = fq.eulerQuaternion(yaw=0, pitch=95, roll=0)
+        self.q_b_i[:, 0] = fq.eulerQuaternion(yaw=0, pitch=0, roll=0)
         """ quaternion transform inertial to body """
         # body states
         self.acceleration_vector_b = np.zeros((3, self.n))
@@ -47,45 +47,66 @@ class Trajectory(object):
         if kwargs["test"] == "translational_movement":
             print("Linear pure trajectory")
             # a gravity value on z direction
-            self.angular_velocity_vector_b[0, 0] = 100.0
-            self.angular_velocity_vector_b[1, 0] = 200.0
-            self.angular_velocity_vector_b[2, 0] = 200.0
-            self.acceleration_vector_i[
-                2, :
-            ] = 10.0 * self.make_delayed_exponential_step(self.time_vector, 0, 1e-3)
+            tau = 1e-2
+            frequency_trajectory = 2*np.pi/(0.05)
+            self.acceleration_vector_i[0, :] = (
+                10.0 * self.make_delayed_exponential_step(self.time_vector, 5e-3, tau)
+            ) * np.sin(frequency_trajectory * self.time_vector*2)
+            self.acceleration_vector_i[1, :] = (
+                10.0 * self.make_delayed_exponential_step(self.time_vector, 20e-3, tau)
+            )*np.sin(frequency_trajectory*self.time_vector)
+            self.acceleration_vector_i[2, :] = (
+                10.0 * self.make_delayed_exponential_step(self.time_vector, 50e-3, tau)
+            ) * np.cos(frequency_trajectory * self.time_vector)
 
         elif kwargs["test"] == "angular_movement":
-            print("Angular trajectory")
+            print(kwargs["test"])
 
-            self.angular_acceleration_vector_b[
-                0, :
-            ] = 2.0 * self.make_delayed_exponential_step(self.time_vector, 10e-3, 1e-1)
-            self.angular_acceleration_vector_b[
-                1, :
-            ] = 2.0 * self.make_delayed_exponential_step(self.time_vector, 20e-3, 1e-1)
-            self.angular_acceleration_vector_b[
-                2, :
-            ] = 2.0 * self.make_delayed_exponential_step(self.time_vector, 30e-3, 1e-1)
-        elif kwargs["test"] == "complete_movement":
-            print("Complete trajectory")
+            tau = 5e-2
             # a gravity value on z direction
-            self.angular_velocity_vector_b[0, 0] = 50.0
-            self.angular_velocity_vector_b[1, 0] = 50.0
-            self.angular_velocity_vector_b[2, 0] = 100.0
-            self.acceleration_vector_i[
-                2, :
-            ] = 10.0 * self.make_delayed_exponential_step(self.time_vector, 0, 1e-3)
+            self.angular_velocity_vector_b[0, 0] = 0.0
+            self.angular_velocity_vector_b[1, 0] = 0.0
+            self.angular_velocity_vector_b[2, 0] = 0.0
+            self.angular_acceleration_vector_b[0, :] = (
+                5.0 * self.make_delayed_exponential_step(self.time_vector, 2e-3, tau)
+            )
+            self.angular_acceleration_vector_b[1, :] = (
+                2.0 * self.make_delayed_exponential_step(self.time_vector, 50e-3, tau)
+            )
+            self.angular_acceleration_vector_b[2, :] = (
+                5 * self.make_delayed_exponential_step(self.time_vector, 100e-3, tau)
+            )
+        elif kwargs["test"] == 'complete_movement':
 
-            self.angular_acceleration_vector_b[
-                0, :
-            ] = 1.0 * self.make_delayed_exponential_step(self.time_vector, 2e-3, 1e-3)
-            self.angular_acceleration_vector_b[
-                1, :
-            ] = 2.0 * self.make_delayed_exponential_step(self.time_vector, 4e-3, 1e-3)
-            self.angular_acceleration_vector_b[
-                2, :
-            ] = 1 * self.make_delayed_exponential_step(self.time_vector, 5e-3, 1e-3)
+            print(kwargs["test"])
+            # a gravity value on z direction
+            tau = 1e-2
+            frequency_trajectory = 2 * np.pi / (0.5)
+            self.acceleration_vector_i[0, :] = (
+                10.0 * self.make_delayed_exponential_step(self.time_vector, 5e-3, tau)
+            ) * np.sin(frequency_trajectory * self.time_vector * 2)
+            self.acceleration_vector_i[1, :] = (
+                10.0 * self.make_delayed_exponential_step(self.time_vector, 20e-3, tau)
+            ) * np.sin(frequency_trajectory * self.time_vector)
+            self.acceleration_vector_i[2, :] = (
+                10.0 * self.make_delayed_exponential_step(self.time_vector, 50e-3, tau)
+            ) * np.cos(frequency_trajectory * self.time_vector)
+            tau = 5e-2
+            # a gravity value on z direction
+            self.angular_velocity_vector_b[0, 0] = 0.0
+            self.angular_velocity_vector_b[1, 0] = 0.0
+            self.angular_velocity_vector_b[2, 0] = 0.0
+            self.angular_acceleration_vector_b[0, :] = (
+                5.0 * self.make_delayed_exponential_step(self.time_vector, 2e-3, tau)
+            ) * np.sin(frequency_trajectory * self.time_vector * 2)
+            self.angular_acceleration_vector_b[1, :] = (
+                5.0 * self.make_delayed_exponential_step(self.time_vector, 50e-3, tau)
+            ) * np.sin(frequency_trajectory * self.time_vector)
+            self.angular_acceleration_vector_b[2, :] = (
+                5 * self.make_delayed_exponential_step(self.time_vector, 100e-3, tau)
+            )* np.cos(frequency_trajectory * self.time_vector)
 
+        # Make integration of initial reference body states
         dt = self.time_vector[1] - self.time_vector[0]
         for idx in range(self.n - 1):
             self.velocity_vector_i[:, idx + 1] = (
@@ -122,7 +143,7 @@ class Trajectory(object):
             )
 
     def make_delayed_exponential_step(
-        self, time_vector: np.ndarray or float, time_delay=0.0, tau=1.0
+        self, time_vector: np.ndarray | float, time_delay=0.0, tau=1.0
     ):
         y = 1 - np.exp(-(time_vector - time_delay) / tau)
         for i, _y in enumerate(y):

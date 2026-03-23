@@ -15,6 +15,7 @@ import pandas as pd
 from IPython.display import display
 from ipywidgets import fixed, interactive
 from matplotlib import ticker
+from matplotlib.ticker import MaxNLocator
 
 from bragg.bragg import Bragg, OpticalCoupler
 
@@ -103,26 +104,53 @@ def plot_reflection_of_transmition(deformation=0.0):
 
 
 def plot_bragg_spectrum():
+
+    l_peak = 1550.0
+    delta_l = 5000
+
+    bragg = Bragg(fbg_size=6.5e-3,
+                delta_n=1e-4,
+                wavelength_peak=l_peak,
+                delta_span_wavelength=delta_l,
+                diff_of_peak=1)
+    index_of_1550_1 = np.where(bragg.wavelength_span_nm>1550.1)[0][0]
     fig, ax = plt.subplots(1, 1, num=1, figsize=(FIG_L, FIG_A*0.75))
-    ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
-    ax.set_ylabel(r'Refletividade [\unit{\percent}]')
+    # ax.xaxis.set_major_locator(ticker.MultipleLocator(.5))
+    # ax.xaxis.set_major_formatter(["1549.5","1550.0","1550.5"])
+    # ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.ticklabel_format(useOffset=False)
+    ax.set_ylabel(r'Refletividade')
     ax.set_xlabel(r'$\lambda [\unit{\nm}]$')
 
-    def plot(_r, i, p):
+    def _plot(_r, i, p):
         # ax.plot(bragg.wavelength_span_nm,np.ones(delta_l),ls+cores,label='Banda Larga')
         ax.plot(bragg.wavelength_span_nm,
-                100.0*_r,
+                _r,
                 color=cores[p],
                 label=i + ' -- Reflex')
         ax.plot(bragg.wavelength_span_nm,
-                100.0*(1.0 - _r),
+                (1.0 - _r),
                 label=i + ' -- Trans',
                 color=cores[p],
                 ls='-.')
-
-    plot(bragg.calc_bragg(-0.0001), r"$d^{\prime}$", 0)
-    plot(bragg.r0, r"$\varepsilon=0$", 1)
-    plot(bragg.calc_bragg(0.0001), r"$d^{\prime\prime}$", 2)
+        ax.plot(
+            bragg.wavelength_span_nm[index_of_1550_1],
+            _r[index_of_1550_1],
+            "x",
+            ms=3,
+            color=cores[p],
+        )
+        ax.plot(
+            bragg.wavelength_span_nm[index_of_1550_1],
+            1.0 - _r[index_of_1550_1],
+            "x",
+            ms=3,
+            color=cores[p],
+        )
+    ax.vlines(bragg.wavelength_span_nm[index_of_1550_1],0,1,alpha=.25,colors=cores[3])
+    _plot(_r=bragg.calc_bragg(-0.0001), i=r"$d^{\prime}$",p=0)
+    _plot(bragg.r0, r"$\varepsilon=0$", 1)
+    _plot(bragg.calc_bragg(0.0001), r"$d^{\prime\prime}$", 2)
     ax.set_xlim(1549.5, 1550.5)
     plt.legend(ncols=3,
                bbox_to_anchor=(0, 1, 1, 0),
