@@ -24,7 +24,7 @@ def find_initial_equilibrium(
     model: accel_model_euler_poincare,
     a_b_0: np.ndarray,
     omega_b_0: np.ndarray,
-    alpha_b_0: np.ndarray,
+    dot_omega_b_0: np.ndarray,
     g_b_0: np.ndarray,
 ):
     """
@@ -41,10 +41,10 @@ def find_initial_equilibrium(
         omega_rel = np.zeros(3)
 
         # Queremos que as acelerações relativas sejam zero no instante inicial
-        a_rel, alpha_rel = model.forward_dynamics(
-            r_rel, v_rel, r_m_b, omega_rel, a_b_0, omega_b_0, alpha_b_0, g_b_0
+        a_rel, dot_omega_rel = model.forward_dynamics(
+            r_rel, v_rel, r_m_b, omega_rel, a_b_0, omega_b_0, dot_omega_b_0, g_b_0
         )
-        return np.concatenate((a_rel, alpha_rel))
+        return np.concatenate((a_rel, dot_omega_rel))*1e6
 
     print("Calculando condição inicial de equilíbrio...")
     res = least_squares(residual, np.zeros(6), method="lm")
@@ -92,7 +92,7 @@ def dynamics_ode(
     omega_n_trans = np.sqrt(4.0 * model.k / model.seismic_mass)
     omega_n_rot = np.sqrt(4.0 * model.k * (model.seismic_edge / 2.0) ** 2 / model.i_m)
     # Amortecimento estrutural real da fibra óptica de sílica
-    damping_ratio = 0.500
+    damping_ratio = 0.100
 
     # Adicionamos a força dissipativa (c * v) diretamente nas acelerações
     a_rel_b -= 2.0 * damping_ratio * omega_n_trans * v_rel_b
