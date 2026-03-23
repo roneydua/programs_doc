@@ -79,6 +79,7 @@ class accel_model_euler_poincare:
         r_b_m = r_m_b.T
         f_el_m = np.zeros(3)
         m_el_m = np.zeros(3)
+        fiber_lengths = np.zeros(12)
 
         for i in range(12):
             anchor_m = self.m_m[i]
@@ -87,6 +88,7 @@ class accel_model_euler_poincare:
             # fiber vector in base frame
             fiber_vec_b = r_rel_b + r_m_b @ anchor_m - anchor_b
             l_i = norm(fiber_vec_b)
+            fiber_lengths[i] = l_i
 
             # unit vector in mass frame
             unit_vec_m = r_b_m @ (fiber_vec_b / l_i)
@@ -97,7 +99,7 @@ class accel_model_euler_poincare:
             f_el_m += f_i_m
             m_el_m += np.cross(anchor_m, f_i_m)
 
-        return f_el_m, m_el_m
+        return f_el_m, m_el_m, fiber_lengths
 
     def forward_dynamics(
         self,
@@ -113,7 +115,7 @@ class accel_model_euler_poincare:
         """
         computes relative translational and angular accelerations for numerical integration.
         """
-        f_el_m, m_el_m = self.compute_elastic_efforts(r_rel_b, r_m_b)
+        f_el_m, m_el_m,_ = self.compute_elastic_efforts(r_rel_b, r_m_b)
         r_b_m = r_m_b.T
 
         # specific force of the base
@@ -142,11 +144,11 @@ class accel_model_euler_poincare:
 
         return a_rel_b, dot_omega_rel_m
 
-    def inverse_dynamics_quasi_static(self, r_rel_b: np.ndarray, r_m_b: np.ndarray):
+    def inverse_dynamics_quasi_static(self, r_rel_b: np.ndarray, r_m_b: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
-        recovers specific force and angular acceleration of the base assuming quasi-static regime.
+        recovers specific force and angular acceleration of the base and fiber lengths assuming quasi-static regime.
         """
-        f_el_m, m_el_m = self.compute_elastic_efforts(r_rel_b, r_m_b)
+        f_el_m, m_el_m, fiber_lengths = self.compute_elastic_efforts(r_rel_b, r_m_b)
 
         # algebraic inversion for specific force
         specific_force_b = (1.0 / self.seismic_mass) * (r_m_b @ f_el_m)
@@ -154,4 +156,4 @@ class accel_model_euler_poincare:
         # algebraic inversion for angular acceleration
         angular_accel_b = (1.0 / self.i_m) * (r_m_b @ m_el_m)
 
-        return specific_force_b, angular_accel_b
+        return specific_force_b, angular_accel_b, fiber_lengths

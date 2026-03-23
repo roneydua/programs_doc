@@ -73,8 +73,9 @@ def solve_inverse_problem():
     estimated_dot_omega_b = np.zeros((num_steps, 3))
     estimated_r_rel = np.zeros((num_steps, 3))
     estimated_euler = np.zeros((num_steps, 3))
-    # initial guess (translation + rotation vector)
-    x0 = np.zeros(6) if estimate_rotation else np.zeros(3)
+    estimated_fiber_lengths = np.zeros((num_steps, 12))
+
+    print(f"solving inverse problem via nonlinear least squares (mode {mmq_mode})...")
 
     print("solving inverse problem via nonlinear least squares...")
     for i in range(num_steps):
@@ -104,10 +105,13 @@ def solve_inverse_problem():
             x0 = res.x
 
         # algebraic inversion (quasi-static assumption)
-        f_b, dot_omega_b = model.inverse_dynamics_quasi_static(r_rel_est, r_m_b_est)
+        f_b, dot_omega_b, fiber_lengths = model.inverse_dynamics_quasi_static(
+            r_rel_est, r_m_b_est
+        )
 
         estimated_f_b[i, :] = f_b
         estimated_dot_omega_b[i, :] = dot_omega_b
+        estimated_fiber_lengths[i, :] = fiber_lengths
 
     # compile estimated results into a pandas dataframe
     df_inv = pd.DataFrame(
@@ -127,6 +131,8 @@ def solve_inverse_problem():
             "euler_est_z": estimated_euler[:, 2],
         }
     )
+    for i in range(12):
+        df_inv[f"fiber_{i+1}_length_est"] = estimated_fiber_lengths[:, i]
 
     # export estimation data
     df_inv.to_csv("inverse_output.csv", index=False)
