@@ -1,8 +1,5 @@
 {
     "python.analysis.extraPaths": ["${workspaceFolder}/"],
-    "cSpell.enableFiletypes": [
-        "python"
-    ],
     "cSpell.words": [
         "ARED",
         "ddrm",
@@ -13,10 +10,21 @@
         "popen",
         "variacao"
     ],
+    "python.defaultInterpreterPath": "./.venv/bin/python3.12",
     "path-intellisense.absolutePathTo": "./",
     "jupyter.notebookFileRoot": "${workspaceFolder}/",
     "jupyter.interactiveWindow.codeLens.enable": true,
     "cSpell.ignoreWords": [
         "lawofs"
+    ],
+    "pylint.args": [
+        "--disable=C0116",
+        "--disable=C0206",
+        "--disable=W0105",
+        "--disable=W0612",
+        "--disable=W0611",
+        "--disable=E1136",
+        "--disable=C0301",
     ]
+    
 }

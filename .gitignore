@@ -112,3 +112,4 @@ fbg_production/20240328.png
 phd_data.hdf5
 production_files.hdf5
 modeling/data.tar.xz
+.venv/
