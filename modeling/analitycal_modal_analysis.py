@@ -116,11 +116,11 @@ class SystemDynamicsAnalyzer:
                 fn_hz = omega_n / (2.0 * np.pi)
                 
                 modes.append({
-                    "Polo Real (σ)": sigma,
-                    "Polo Imag (ωd)": wd,
-                    "ω_n [rad/s]": omega_n,
+                    "Polo Real (sigma)": sigma,
+                    "Polo Imag (omega_d)": wd,
+                    "omega_n [rad/s]": omega_n,
                     "f_n [Hz]": fn_hz,
-                    "ζ (Amortecimento)": zeta
+                    "zeta (Amortecimento)": zeta
                 })
                 
         # Ordena pelos modos de menor frequência
