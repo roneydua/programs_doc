@@ -92,7 +92,7 @@ def dynamics_ode(
     omega_n_trans = np.sqrt(4.0 * model.k / model.seismic_mass)
     omega_n_rot = np.sqrt(4.0 * model.k * (model.seismic_edge / 2.0) ** 2 / model.i_m)
     # Amortecimento estrutural real da fibra óptica de sílica
-    damping_ratio = 0.100
+    damping_ratio = 0.00
 
     # Adicionamos a força dissipativa (c * v) diretamente nas acelerações
     a_rel_b -= 2.0 * damping_ratio * omega_n_trans * v_rel_b
@@ -119,6 +119,7 @@ def simulate_dynamics(t_end: float, dt: float):
     extrai os comprimentos e salva com pandas.
     """
     # 1. Definir parâmetros de tempo e gerar a trajetória
+    print(f"generate trajectories with final time{t_end}s spaced by dt {dt}s")
     df_traj = generate_base_trajectories(t_end=t_end, dt=dt)
 
     # 2. Extrair dados para numpy arrays (necessário para o interpolador)
@@ -204,8 +205,9 @@ def simulate_dynamics(t_end: float, dt: float):
         data_dict[f"fiber_{j+1}_length"] = fiber_lengths[:, j]
 
     df_sim = pd.DataFrame(data_dict)
-    df_sim.to_csv("simulation_output.csv", index=False)
-    print("Dados da simulação salvos em simulation_output.csv")
+    save_data_pah = "./modeling/data/simulation_output.csv"
+    df_sim.to_csv(save_data_pah, index=False)
+    print(f"Dados da simulação salvos em {save_data_pah}")
 
 
 if __name__ == "__main__":

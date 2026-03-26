@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation
-from modeling.accel_model import accel_model_euler_poincare  # Ajuste o path do import
+from modeling.accel_model import accel_model_euler_poincare 
 
 
 def objective_function(
@@ -28,7 +28,7 @@ def objective_function(
         r_m_b = Rotation.from_rotvec(rot_vec).as_matrix()
 
     elif mmq_mode == 3:
-        # scenario 3: reduced / angularly linearized (section 3.5.3)
+        # scenario 3: reduced /angularly linearized (section 3.5.3)
         # small angle approximation: R = I + skew(theta)
         theta_x, theta_y, theta_z = x[3:6]
         skew_theta = np.array(
@@ -43,8 +43,8 @@ def objective_function(
     residuals = []
     for j in active_fibers:
         if mmq_mode == 3:
-            # TODO: caso a formulação do seu MMQ reduzido omita algebricamente
-            # a interação de r_rel_b com r_m_b, ajuste esta equação vetorial.
+            # TODO: if the formulation of your reduced MMQ omits algebraically
+            # the interaction of r_rel_b with r_m_b, fit this vector equation.
             fiber_vec_b = r_rel_b + r_m_b @ model.m_m[j] - model.b_b[j]
         else:
             fiber_vec_b = r_rel_b + r_m_b @ model.m_m[j] - model.b_b[j]
@@ -61,7 +61,7 @@ def solve_inverse_problem():
     estimates relative pose and recovers base accelerations using quasi-static assumption.
     evaluates user-defined mmq scenarios.
     """
-    df_sim = pd.read_csv("simulation_output.csv")
+    df_sim = pd.read_csv("./data/modeling/simulation_output.csv")
     time_vector = df_sim["time"].values
 
     length_columns = [f"fiber_{j+1}_length" for j in range(12)]
@@ -69,7 +69,7 @@ def solve_inverse_problem():
 
     model = accel_model_euler_poincare()
 
-    # --- configuration parameters ---
+    # ---configuration parameters ---
     active_fibers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 
     # 1: translational, 2: complete, 3: reduced
@@ -152,7 +152,7 @@ def solve_inverse_problem():
     for i in range(12):
         df_inv[f"fiber_{i+1}_length_est"] = estimated_fiber_lengths[:, i]
 
-    df_inv.to_csv("inverse_output.csv", index=False)
+    df_inv.to_csv("./data/modeling/inverse_output_levenberg_marquardt.csv", index=False)
     print("inverse problem solved. estimations saved to inverse_output.csv.")
 
 

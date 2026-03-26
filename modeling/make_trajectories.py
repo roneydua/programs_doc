@@ -9,33 +9,25 @@ def generate_base_trajectories(t_end=0.1, dt=1e-4):
     e derivando numericamente para obter velocidades e acelerações.
     """
     pad_stesps = 5
-    time_vector = np.arange(0-pad_stesps * dt, t_end+(pad_stesps * dt), dt, dtype=np.float64)
+    time_vector = np.arange(
+        0 - pad_stesps * dt, t_end + (pad_stesps * dt), dt, dtype=np.float64
+    )
     num_steps = len(time_vector)
 
     # 1. Definir Posição (r_b) e Atitude (ângulos de Euler em radianos)
-    f_trans = 5.0
-    amplitude_trans = .1
+    f_trans = [1.0, 1.0, 1.0]
+    amplitude_trans = [1, 1, 1]
     r_b = np.zeros((num_steps, 3))
-    r_b[:, 0] = amplitude_trans * np.sin(
-        2.0 * np.pi * f_trans * time_vector
-    )  # Oscilação em X
+    for i in range(3):
+        r_b[:, i] = amplitude_trans[i] * np.sin(2.0 * np.pi * f_trans[i] * time_vector)
 
-    f_rot_x = 1.0
-    f_rot_y = 2.0
-    f_rot_z = 2.0
-    theta_x = np.deg2rad(5.0)
-    theta_y = np.deg2rad(10.0)
-    theta_z = -np.deg2rad(10.0)
+    f_rot = [2.0, 2, 2.0]
+    theta = [np.deg2rad(1.0), np.deg2rad(1.0), -np.deg2rad(1.0)]
     angles = np.zeros((num_steps, 3))
-    angles[:, 0] = theta_x * np.sin(
-        2.0 * np.pi * f_rot_x * time_vector
-    )
-    angles[:, 1] = theta_y * np.sin(
-        2.0 * np.pi * f_rot_y * time_vector
-    )
-    angles[:, 2] = theta_z * np.sin(
-        2.0 * np.pi * f_rot_z * time_vector
-    )
+    for i in range(3):
+        angles[:, i] = theta[i] * np.sin(2.0 * np.pi * f_rot[i] * time_vector)
+    # angles[:, 1] = theta_y * np.sin(2.0 * np.pi * f_rot_y * time_vector)
+    # angles[:, 2] = theta_z * np.sin(2.0 * np.pi * f_rot_z * time_vector)
 
     # 2. Derivação Numérica da Translação
     # Usamos np.gradient para manter o tamanho N do vetor (diferenças centrais)
@@ -83,11 +75,11 @@ def generate_base_trajectories(t_end=0.1, dt=1e-4):
         }
     )
 
-    df.to_csv("trajectories.csv", index=False)
+    df.to_csv("modeling/data/trajectories.csv", index=False)
     print("Trajetória perfeita salva em trajectories.csv")
 
     return df
 
 
 if __name__ == "__main__":
-    generate_base_trajectories(t_end=0.1, dt=1e-4)
+    generate_base_trajectories(t_end=0.5, dt=1e-4)
