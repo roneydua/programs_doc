@@ -71,14 +71,26 @@ class accel_model_euler_poincare:
                 [-_d, 0.0, -_f],
             ]
         )
-
-    def compute_elastic_efforts(self, r_rel_b: np.ndarray, r_m_b: np.ndarray):
+        print(f"Mass {self.seismic_mass}\n inertial {self.i_m}\n spring_stiffness{self.k}")
+    def compute_elastic_efforts(
+        self,
+        r_rel_b: np.ndarray,
+        v_rel_b: np.ndarray,
+        r_m_b: np.ndarray,
+        omega_rel_m: np.ndarray,
+    ):
         """
         computes elastic forces and moments in the seismic mass frame.
         """
         r_b_m = r_m_b.T
+        # Convert relative velocity to mass frame
+        v_rel_m = r_b_m @ v_rel_b
+
         f_el_m = np.zeros(3)
         m_el_m = np.zeros(3)
+        # Damping constant proportional to stiffness (alpha)
+        # For pure silica, it is a value in the range of 1e-6 to 1e-5 s.
+        alpha_damping = 5e-5
         fiber_lengths = np.zeros(12)
 
         for i in range(12):
@@ -88,13 +100,20 @@ class accel_model_euler_poincare:
             # fiber vector in base frame
             fiber_vec_b = r_rel_b + r_m_b @ anchor_m - anchor_b
             l_i = norm(fiber_vec_b)
+            unit_vec_m = r_b_m @ (fiber_vec_b / l_i)
             fiber_lengths[i] = l_i
 
             # unit vector in mass frame
             unit_vec_m = r_b_m @ (fiber_vec_b / l_i)
+            # v_point = v_rel + omega_rel x r_anchor
+            v_point_m = v_rel_m + np.cross(omega_rel_m, anchor_m)
 
+            # Fiber time elongation rate (dot product)
+            l_dot_i = np.dot(v_point_m, unit_vec_m)
             # elastic force for fiber i in mass frame
-            f_i_m = -self.k * (l_i - self.fiber_length_0) * unit_vec_m
+            f_elastic = self.k * (l_i - self.fiber_length_0)
+            f_damping = (alpha_damping * self.k) * l_dot_i
+            f_i_m = -(f_elastic + f_damping) * unit_vec_m
 
             f_el_m += f_i_m
             m_el_m += np.cross(anchor_m, f_i_m)
@@ -115,7 +134,9 @@ class accel_model_euler_poincare:
         """
         computes relative translational and angular accelerations for numerical integration.
         """
-        f_el_m, m_el_m,_ = self.compute_elastic_efforts(r_rel_b, r_m_b)
+        f_el_m, m_el_m, _ = self.compute_elastic_efforts(
+            r_rel_b=r_rel_b, v_rel_b=v_rel_b, r_m_b=r_m_b, omega_rel_m=omega_rel_m
+        )
         r_b_m = r_m_b.T
 
         # specific force of the base
@@ -144,11 +165,15 @@ class accel_model_euler_poincare:
 
         return a_rel_b, dot_omega_rel_m
 
-    def inverse_dynamics_quasi_static(self, r_rel_b: np.ndarray, r_m_b: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def inverse_dynamics_quasi_static(
+        self, r_rel_b: np.ndarray, r_m_b: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         recovers specific force and angular acceleration of the base and fiber lengths assuming quasi-static regime.
         """
-        f_el_m, m_el_m, fiber_lengths = self.compute_elastic_efforts(r_rel_b, r_m_b)
+        f_el_m, m_el_m, fiber_lengths = self.compute_elastic_efforts(
+            r_rel_b=r_rel_b, v_rel_b=np.zeros(3), r_m_b=r_m_b, omega_rel_m=np.zeros(3)
+        )
 
         # algebraic inversion for specific force
         specific_force_b = (1.0 / self.seismic_mass) * (r_m_b @ f_el_m)
