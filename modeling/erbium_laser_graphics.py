@@ -56,7 +56,7 @@ fix_power_resolution = lambda d: d.power_dbm - 10.0 * np.log10(
 
 dBm2mW = lambda dBm: 10.0**(dBm * 0.1)
 mW2dBm = lambda mW: 10.0 * np.log10(mW)
-power_mW = lambda d: np.trapz(x=d.wavelength,
+power_mW = lambda d: np.trapezoid(x=d.wavelength,
                               y=(dBm2mW(d.power_dbm - 10.0 * np.log10(
                                   d.actual_resolution[0]))))
 

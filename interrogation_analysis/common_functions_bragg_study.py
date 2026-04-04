@@ -53,11 +53,11 @@ def calc_total_pot(bragg1: Bragg,
         ref = bragg1.calc_bragg(deformation_vector[i])
         if bragg2 != None:
             ref2 = bragg2.calc_bragg(-deformation_vector[i])
-            pot[i] = np.trapz(x=bragg1.wavelength_span,
+            pot[i] = np.trapezoid(x=bragg1.wavelength_span,
                               y=interrogation_function(ref, ref2,
                                                        optical_source))
         else:
-            pot[i] = np.trapz(x=bragg1.wavelength_span,
+            pot[i] = np.trapezoid(x=bragg1.wavelength_span,
                               y=interrogation_function(ref, optical_source))
 
     return pot
@@ -86,7 +86,7 @@ def calc_total_pot(bragg1: Bragg,
 #     pot_transmission = np.zeros(deformation_vector.size)
 #     for i in range(deformation_vector.size):
 #         ref = bragg.calc_bragg(deformation_vector[i])
-#         pot_transmission[i] = np.trapz(x=bragg.wavelength_span,
+#         pot_transmission[i] = np.trapezoid(x=bragg.wavelength_span,
 #                                        y=transmission_interrogation(
 #                                            ref, laser))
 #     return pot_transmission
@@ -95,7 +95,7 @@ def calc_total_pot(bragg1: Bragg,
 #     pot_reflection = np.zeros(deformation_vector.size)
 #     for i in range(deformation_vector.size):
 #         ref = bragg.calc_bragg(deformation_vector[i])
-#         pot_reflection[i] = np.trapz(x=bragg.wavelength_span,
+#         pot_reflection[i] = np.trapezoid(x=bragg.wavelength_span,
 #                                      y=reflection_interrogation(ref, laser))
 #     return pot_reflection
 
@@ -106,7 +106,7 @@ def calc_total_pot(bragg1: Bragg,
 #         ref = bragg.calc_bragg(deformation_vector[i])
 #         ref2 = bragg2.calc_bragg(-deformation_vector[i],
 #                                  wavelength_vector=bragg.wavelength_span)
-#         pot_reflection_reflection[i] = np.trapz(
+#         pot_reflection_reflection[i] = np.trapezoid(
 #             x=bragg.wavelength_span,
 #             y=reflection_reflection_interrogation(ref, ref2, laser))
 #     return pot_reflection_reflection
@@ -118,7 +118,7 @@ def calc_total_pot(bragg1: Bragg,
 #         ref = bragg.calc_bragg(deformation_vector[i])
 #         ref2 = bragg2.calc_bragg(-deformation_vector[i],
 #                                  wavelength_vector=bragg.wavelength_span)
-#         pot_transmission_transmission[i] = np.trapz(
+#         pot_transmission_transmission[i] = np.trapezoid(
 #             x=bragg.wavelength_span,
 #             y=transmission_transmission_interrogation(ref, ref2, laser))
 #     return pot_transmission_transmission
@@ -130,7 +130,7 @@ def calc_total_pot(bragg1: Bragg,
 #         ref = bragg.calc_bragg(deformation_vector[i])
 #         ref2 = bragg2.calc_bragg(-deformation_vector[i],
 #                                  wavelength_vector=bragg.wavelength_span)
-#         pot_reflection_transmission[i] = np.trapz(x=bragg.wavelength_span,
+#         pot_reflection_transmission[i] = np.trapezoid(x=bragg.wavelength_span,
 #                                                   y=0.25 * ref2 * (1. - ref) *
 #                                                   laser)
 #     return pot_reflection_transmission
@@ -142,7 +142,7 @@ def calc_total_pot(bragg1: Bragg,
 #         ref = bragg.calc_bragg(deformation_vector[i])
 #         ref2 = bragg2.calc_bragg(-deformation_vector[i],
 #                                  wavelength_vector=bragg.wavelength_span)
-#         pot_transmission_reflection[i] = np.trapz(
+#         pot_transmission_reflection[i] = np.trapezoid(
 #             x=bragg.wavelength_span,
 #             y=transmission_reflection_interrogation(ref, ref2, laser))
 #     return pot_transmission_reflection

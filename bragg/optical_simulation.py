@@ -257,8 +257,8 @@ def plot_pot_vs_deformation():
         r = bragg.calc_bragg(deformation=e[i],
                             wavelength_vector=laser.wave_length * 1e-9)
 
-        pot_reflection[i] = np.trapz(x=laser.wave_length * 1e-9, y=0.5*r * laser_power_w)
-        pot_transmition[i] = np.trapz(x=laser.wave_length * 1e-9, y=1.0/6.0*(1.0 - r) * laser_power_w)
+        pot_reflection[i] = np.trapezoid(x=laser.wave_length * 1e-9, y=0.5*r * laser_power_w)
+        pot_transmition[i] = np.trapezoid(x=laser.wave_length * 1e-9, y=1.0/6.0*(1.0 - r) * laser_power_w)
 
     fig, ax = plt.subplots(2, 1, num=1, sharex=True, figsize=(FIG_L, FIG_A))
     fig.supylabel("$\\si{\\pico\\watt}$")
@@ -292,7 +292,7 @@ def graphicsAnimation(_e=0):
     r = bragg.calc_bragg(deformation=_e,
                          wavelength_vector=laser.wave_length * 1e-9)
     pot = r * laser_power_w
-    pot_total = np.trapz(x=laser.wave_length * 1e-9, y=pot)
+    pot_total = np.trapezoid(x=laser.wave_length * 1e-9, y=pot)
     ax.plot(laser.wave_length, pot,label='{:2.4f}'.format(pot_total*1e12)+"$\\si{\\pico\\watt}$")
     ax.legend()
     # ax.plot(laser.wave_length,laser_power_w)

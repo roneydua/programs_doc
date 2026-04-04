@@ -28,7 +28,7 @@ lin2dBm = lambda lin: 10.0 * np.log10(lin)
 normalize_spectrum = lambda d: np.array(
     [1e9 * d[1:, 0],
      dbm2mW(d[1:, 1] - lin2dBm(1e9 * np.diff(d[:, 0])))]).T
-power_mW = lambda d: np.trapz(x=d[:, 0], y=1e3 * d[:, 1])
+power_mW = lambda d: np.trapezoid(x=d[:, 0], y=1e3 * d[:, 1])
 
 # Fix the data with resolution and convert data in dBm to mW
 

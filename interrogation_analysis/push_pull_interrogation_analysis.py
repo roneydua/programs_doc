@@ -97,7 +97,7 @@ class fbg_simulation(object):
             self.first_reflected_spectrum * self.fbg_d_shifted
         )
         self.power_of_second_reflected_spectrum_W = (
-            np.trapz(y=self.second_reflected_spectrum) * self.step_of_w_fbg
+            np.trapezoid(y=self.second_reflected_spectrum) * self.step_of_w_fbg
         )
 
 
@@ -332,7 +332,7 @@ def plot_power_vs_accel_complete_acc(
     cl = common_labels
     legend_name = [cl["x"], cl["y"], cl["z"]]
     f = h5py.File("./phd_data.hdf5", "a")
-    del f["20260108"]
+    # del f["20260108"]
     _ff = f.require_group("mounted_acc/acc_4/20260108")
     if "linearity_analisys" in _ff.keys():
         del _ff["linearity_analisys"]
@@ -385,7 +385,7 @@ def plot_power_vs_accel_complete_acc(
     ax.legend()
     plt.savefig(TESE_FOLDER + fig_name_to_save + "_" + language + ".pdf", format="pdf")
     plt.close(fig=1)
-
+    print("to aqui")
 
 def simulation_push_pull_symbolic():
     def gaussian_func(wavelength, wavelength_center, standart_deviation):

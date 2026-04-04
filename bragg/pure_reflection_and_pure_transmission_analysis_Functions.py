@@ -132,7 +132,7 @@ class InterrogationClass(object):
                    self.optical_source / self.optical_source.max(),
                    label=self.optical_source_label)
 
-        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+        total_protodetector_power = np.trapezoid(x=self.bragg1.wavelength_span,
                                              y=photodetector_power)
         ax[1].plot(self.deformation_vector * 1e6, 1e6 * self.pot_photodetector)
 
@@ -182,7 +182,7 @@ class Transmition(object):
                    label="Laser")
 
         photodetector_power = transmission_interrogation(ref,self.laser)
-        total_protodetector_power = np.trapz(x=self.bragg.wavelength_span,
+        total_protodetector_power = np.trapezoid(x=self.bragg.wavelength_span,
                                              y=photodetector_power)
         ax[1].plot(self.deformation_vector * 1e6,
                    1e6 * self.pot_transmission,
@@ -220,7 +220,7 @@ class Reflection(object):
         ref = self.bragg.calc_bragg(deformation=deformation)
 
         photodetector_power = 0.25 * (ref) * self.laser
-        total_protodetector_power = np.trapz(x=self.bragg.wavelength_span,
+        total_protodetector_power = np.trapezoid(x=self.bragg.wavelength_span,
                                              y=photodetector_power)
         ax[0].plot(self.bragg.wavelength_span_nm,
                    ref,
@@ -282,7 +282,7 @@ class ReflectionReflection(object):
                    self.laser / self.laser.max() * self.bragg1.r0.max(),
                    label="Laser")
         photodetector_power = 1.0 / 16.0 * (ref1 * ref2) * self.laser
-        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+        total_protodetector_power = np.trapezoid(x=self.bragg1.wavelength_span,
                                              y=photodetector_power)
         ax[1].plot(self.bragg1.wavelength_span_nm,
                    1e-3 * photodetector_power,
@@ -341,7 +341,7 @@ class TransmissionTransmission(object):
                    label="Laser")
         ax[0].legend()
         photodetector_power = (1.0 - ref1) * (1.0 - ref2) * self.laser
-        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+        total_protodetector_power = np.trapezoid(x=self.bragg1.wavelength_span,
                                              y=photodetector_power)
         ax[1].plot(self.bragg1.wavelength_span_nm,
                    1e-3 * photodetector_power,
@@ -400,7 +400,7 @@ class ReflectionTransmission(object):
         ax[0].legend()
 
         photodetector_power = 0.25 * ref2 * (1.0 - ref1) * self.laser
-        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+        total_protodetector_power = np.trapezoid(x=self.bragg1.wavelength_span,
                                              y=photodetector_power)
         ax[1].plot(self.bragg1.wavelength_span_nm,
                    1e-3 * photodetector_power,
@@ -459,7 +459,7 @@ class TransmissionReflection(object):
         ax[0].legend()
 
         photodetector_power = 0.25 * (1.0 - ref2) * ref1 * self.laser
-        total_protodetector_power = np.trapz(x=self.bragg1.wavelength_span,
+        total_protodetector_power = np.trapezoid(x=self.bragg1.wavelength_span,
                                              y=photodetector_power)
         ax[1].plot(self.bragg1.wavelength_span_nm,
                    1e-3 * photodetector_power,

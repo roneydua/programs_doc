@@ -70,7 +70,7 @@ def interrogation_laser_one_fbg():
         color=my_colors[3],
         label=r"$\varepsilon<0$",
     )
-    # total_power = np.trapz(x=_bragg.wavelength_span, y=_laser)
+    # total_power = np.trapezoid(x=_bragg.wavelength_span, y=_laser)
     # ax[1].xaxis.set_major_locator(ticker.MultipleLocator(.5))
     ax2 = ax.twinx()
     ax2.yaxis.label.set_color(my_colors[1])
