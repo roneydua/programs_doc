@@ -334,9 +334,9 @@ def plot_power_vs_accel_complete_acc(
     f = h5py.File("./phd_data.hdf5", "a")
     # del f["20260108"]
     _ff = f.require_group("mounted_acc/acc_4/20260108")
-    if "linearity_analisys" in _ff.keys():
-        del _ff["linearity_analisys"]
-    ff = _ff.require_group("linearity_analisys")
+    if "linearity_analysis" in _ff.keys():
+        del _ff["linearity_analysis"]
+    ff = _ff.require_group("linearity_analysis")
     dd_r_vec = np.arange(start=-400, stop=600, step=20)
     ff["dd_r_vec"] = dd_r_vec
     for left_fbg, right_fbg, row in zip(fbg_name_d, fbg_name_e, range(3)):
@@ -453,9 +453,9 @@ def acc_6_analysis(language="pt"):
     )
 
 
-def linearity_analisys_acc_4(language:str):
+def linearity_analysis_acc_4(language:str):
     f = h5py.File("./phd_data.hdf5", "r")
-    ff = f["mounted_acc/acc_4/20260108/linearity_analisys"]
+    ff = f["mounted_acc/acc_4/20260108/linearity_analysis"]
     plot_texts = {
         "pt": {
             "domain_name": r"Fundo de escala [\si{\m\per\second\squared}]",

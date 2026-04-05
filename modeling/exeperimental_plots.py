@@ -33,7 +33,7 @@ def plot_laser():
     ax.set_xlim(left=1549, right=1549.5)
     for i in [1]:
         laser_watt = dbm2W(laser_data[i].power)
-        pot = np.trapz(x=laser_data[i].wave_length * 1e-9, y=laser_watt)
+        pot = np.trapezoid(x=laser_data[i].wave_length * 1e-9, y=laser_watt)
         index_max_y = np.argmax(laser_watt)
         ax.plot(laser_data[i].wave_length,
                 laser_watt,

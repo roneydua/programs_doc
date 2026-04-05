@@ -71,7 +71,7 @@ class accel_model_euler_poincare:
                 [-_d, 0.0, -_f],
             ]
         )
-        print(f"Mass {self.seismic_mass}\n inertial {self.i_m}\n spring_stiffness{self.k}")
+        # print(f"Mass {self.seismic_mass}\n inertial {self.i_m}\n spring_stiffness{self.k}")
     def compute_elastic_efforts(
         self,
         r_rel_b: np.ndarray,
@@ -90,7 +90,8 @@ class accel_model_euler_poincare:
         m_el_m = np.zeros(3)
         # Damping constant proportional to stiffness (alpha)
         # For pure silica, it is a value in the range of 1e-6 to 1e-5 s.
-        alpha_damping = 5e-5
+        # alpha_damping = 5e-5
+        alpha_damping = 2.2e-6
         fiber_lengths = np.zeros(12)
 
         for i in range(12):

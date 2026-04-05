@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-@File    :   fbg_symbolic_analisys.py
+@File    :   fbg_symbolic_analysis.py
 @Time    :   2023/05/13 18:08:24
 @Author  :   Roney D. Silva
 @Contact :   roneyddasilva@gmail.com
