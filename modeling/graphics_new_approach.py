@@ -51,7 +51,7 @@ class inverse_problem_visualizer:
             ["dot_omega_b_x", "dot_omega_b_y", "dot_omega_b_z"]
         ].values
         self.omega_b_true = traj_data[["omega_b_x", "omega_b_y", "omega_b_z"]].values
-        self.euler_traj_true = traj_data[
+        self.euler_traj_true:np.ndarray = traj_data[
             ["euler_phi", "euler_theta", "euler_psi"]
         ].values
 
@@ -165,7 +165,7 @@ class inverse_problem_visualizer:
             )
             ax[1, 0].plot(
                 self.time,
-                np.rad2deg(self.omega_b_true[:, i]),
+                np.rad2deg(np.ndarray:self.omega_b_true[:, i]),
                 label=f"${self.axis_labels[i]}$",
             )
             ax[2, 0].plot(

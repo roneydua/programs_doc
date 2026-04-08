@@ -52,14 +52,14 @@ def reflectivity_chapter():
 
 def result_chaper():
     "Cap. Resultados"
-    # linearity_analysis_acc_4("pt")
-    # plot_graphics_with_pairs_acc_4('pt')
-    # acc_4_analysis(language="pt")
-    # plot_allan_deviation_20240814('pt')
-    # calibration_with_temperature_dependency("pt", save_calibrated_data=False)
+    linearity_analysis_acc_4("pt")
+    plot_graphics_with_pairs_acc_4('pt')
+    acc_4_analysis(language="pt")
+    plot_allan_deviation_20240814('pt')
+    calibration_with_temperature_dependency("pt", save_calibrated_data=False)
     linearity_analysis_20240828("pt")  # linearity_with_respect_to_full_scale
-    # plot_graphics("sinusoidal_with_temp_perturbation")
-    # plot_otimizacao_parametrica_frequencia()
+    plot_graphics("sinusoidal_with_temp_perturbation")
+    plot_otimizacao_parametrica_frequencia()
 def appends():
     plot_time_elapsed_fbg_production('pt')
 
