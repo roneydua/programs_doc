@@ -188,8 +188,8 @@ class AccelModelInertialFrame(object):
             % self.undamped_rotational_natural_frequency_hz
         )
         """ undamped natural frequency hz"""
-        self.minimal_recomendated_time_step = 1 / (10.*self.undamped_translation_natural_frequency_hz)
-        print("Is is recomendated that time step of integrator is 10x(1/natural frequency) so %1.0e s \t" % self.minimal_recomendated_time_step)
+        # self.minimal_recomendated_time_step = 1 / (10.*self.undamped_translation_natural_frequency_hz)
+        # print("Is is recomendated that time step of integrator is 10x(1/natural frequency) so %1.0e s \t" % self.minimal_recomendated_time_step)
         # legend of numerical point
 
     def update_inertial_coil_connections(self):

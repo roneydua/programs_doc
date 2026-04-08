@@ -43,6 +43,8 @@ gravity_span_vector = (
 )
 update_pot_vs_gravity = True
 
+TESE_FOLDER = "./../tese/images/used_on_thesis/"
+
 
 def interrogation_laser_one_fbg():
     _bragg = Bragg(
@@ -78,7 +80,7 @@ def interrogation_laser_one_fbg():
     ax2.spines["right"].set_edgecolor(my_colors[1])
     ax2.tick_params(axis="y", colors=my_colors[1])
     ax2.plot(_bragg.wavelength_span_nm, _laser / _laser.max(), color=my_colors[1])
-    ax2.set_ylabel(r"Potência laser $[\unit{\mW}]$")
+    ax2.set_ylabel(r"Potência refletida $[\unit{\mW}]$")
     ax.set_ylabel(r"Refletividade")
     fig.supxlabel("$\\lambda$ [\\si{\\nm}]")
     ax.legend()

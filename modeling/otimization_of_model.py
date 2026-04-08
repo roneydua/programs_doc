@@ -1,75 +1,94 @@
 import numpy as np
-from scipy.optimize import minimize
+import matplotlib.pyplot as plt
+import locale
+plt.style.use("common_functions/roney3.mplstyle")
+my_colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+FIG_L = 6.29
+FIG_A = FIG_L * 10/16
+TESE_FOLDER = "./../tese/images/used_on_thesis/"
 
-def otimizar_acelerometro(f_alvo):
-    # Parâmetros Físicos e Constantes
-    rho_al = 2698.9      # Densidade do alumínio (kg/m^3)
-    E_silica = 70e9      # Módulo de Young da sílica (Pa)
-    phi_fiber = 125e-6   # Diâmetro da fibra óptica (m)
-    A_fiber = np.pi * (phi_fiber**2) / 4.0
-    p_e = 0.22           # Constante fotoelástica efetiva da fibra
-    g = 9.81             
-    
-    w_alvo = 2 * np.pi * f_alvo
 
-    # (Como S depende apenas de M linearmente, maximizar M maximiza S)
-    def objective(x):
-        L, l0 = x
-        M = rho_al * (L**3)
-        return -M  # Retorna negativo para o minimizador
+def plot_otimizacao_parametrica_frequencia():
 
-    # Restrição: f_n >= f_alvo  => w_n^2 - w_alvo^2 >= 0
-    def constraint_freq(x):
-        L, l0 = x
-        M = rho_al * (L**3)
-        w_n_sq = (4 * E_silica * A_fiber) / (l0 * M)
-        return w_n_sq - (w_alvo**2)
+    # Parâmetros
+    g = 9.81
+    lambda_b = 1550e3  # em pm
+    p_e = 0.21
+    rho_al = 2698.9
+    E_silica = 70e9
 
-    # Limites físicos de manufatura (em metros)
-    # l0: Comprimento da fibra entre 1 mm e 10 mm
-    bounds = [(0.005, 0.040), (0.001, 0.010)]
+    # Vetores
+    l0 = np.linspace(0.001, 0.005, 100)  # 1mm a 3mm
+    freqs = [1000, 1561, 2000]
+    d_125 = 125e-6
+    d_80 = 80e-6
+    A_125 = np.pi * (d_125**2) / 4
+    A_80 = np.pi * (d_80**2) / 4
 
-    # Chute inicial (os valores do seu protótipo atual)
-    x0 = [0.0164, 0.003]
 
-    # Dicionário de restrições para o solver SLSQP
-    con = {'type': 'ineq', 'fun': constraint_freq}
+    def calc_ssp(l0:float,wn:float):
+        return 2 * lambda_b * (1.0 - p_e) * (g / (l0 * wn**2))
 
-    # Executa a otimização
-    res = minimize(objective, x0, method='SLSQP', bounds=bounds, constraints=con)
+    fig, (ax1, ax2) = plt.subplots(2, 1,sharex=True,figsize=(FIG_L, 1.25*FIG_A))
 
-    # Extração dos resultados ótimos
-    L_opt, l0_opt = res.x
-    M_opt = rho_al * (L_opt**3)
-    
-    # Cálculos finais de validação
-    w_n_opt = np.sqrt((4 * E_silica * A_fiber) / (l0_opt * M_opt))
-    f_n_opt = w_n_opt / (2 * np.pi)
-    
-    # Sensibilidade Translacional Única (em /g)
-    # epsilon/g = M_opt * g / (4 * E_silica * A_fiber)
-    S_trans = (1 - p_e) * (M_opt * g) / (4 * E_silica * A_fiber)
-    
-    k = E_silica * A_fiber / l0_opt
-    print(np.sqrt(k /M_opt))
-    # Sensibilidade Diferencial Push-Pull (multiplicada por 2)
-    S_push_pull = 2 * S_trans
+    for fn in freqs:
+        wn = 2 * np.pi * fn
+        S_pp = calc_ssp(l0,wn)
+        ax1.plot(l0 * 1000, S_pp, label=f'$f_n$ = {fn} Hz')
 
-    print(f"--- Resultados da Otimização para f_alvo = {f_alvo} Hz ---")
-    print(f"Status da Otimização: {res.message}")
-    print(f"Aresta ideal do cubo (L):  {L_opt*1000:.2f} mm")
-    print(f"Comprimento da fibra (l0): {l0_opt*1000:.2f} mm")
-    print(f"Massa sísmica ideal (M):   {M_opt*1000:.2f} g")
-    print(f"Frequência natural final:  {f_n_opt:.2f} Hz")
-    print(f"Sensibilidade (Push-Pull): {S_push_pull * 1e6:.2f} µstrain/g")
-    # Para pm/g, basta multiplicar a strain_push_pull pelo lambda_B (ex: 1550 nm)
-    sens_pm_g = (S_push_pull) * 1550e3
-    print(f"Sensibilidade em Bragg:    {sens_pm_g:.2f} pm/g (para λB = 1550 nm)\n")
+    ax1.plot(
+        3,
+        calc_ssp(3e-3, 1561 * 2 * np.pi),
+        "o",
+        color=my_colors[1],
+        markerfacecolor=my_colors[4],
+        markersize=5,
+    )
+    ax1.plot(
+        2,
+        calc_ssp(2e-3, 1561 * 2 * np.pi),
+        "+",
+        color=my_colors[4],
+        markerfacecolor=my_colors[4],
+        markersize=8,
+    )
 
-    return res.x
+    def calc_L125(l0,wn):
+        return ((4 * E_silica * A_125) / (rho_al * l0 * wn**2)) ** (1 / 3)
+    def calc_L80(l0,wn):
+        return ((4 * E_silica * A_80) / (rho_al * l0 * wn**2)) ** (1 / 3)
+
+    for i, fn in enumerate(freqs):
+        wn = 2 * np.pi * fn
+        # L para 125 um
+        L_80 = calc_L80(l0,wn)
+        ax2.plot(l0 * 1000, L_80 * 1000, color=my_colors[i], linestyle='--',lw=1.5, label=f'{fn} Hz (80 $\\mu$m)')
+        L_125 = calc_L125(l0,wn)
+        ax2.plot(l0 * 1000, L_125 * 1000, color=my_colors[i], linestyle='-', label=f'{fn} Hz (125 $\\mu$m)')
+        # L para 80 um
+    ax2.plot(
+        3,
+        1000 * calc_L125(3e-3, 1561 * 2 * np.pi),
+        "o",
+        color=my_colors[1],
+        markerfacecolor=my_colors[4],
+        markersize=5,
+    )
+    ax2.plot(
+        2,
+        1000 * calc_L125(2e-3, 1561 * 2 * np.pi),
+        "+",
+        color=my_colors[4],
+        markerfacecolor=my_colors[4],
+        markersize=8,
+    )
+    fig.supxlabel(r'Comprimento inicial $\ell_0$ [$\si{\milli\meter}]$')
+    ax1.set_ylabel(r"Sensibilidade $[\si{\pico\meter\per\g_{E}}]$")
+    ax1.legend()
+    ax2.set_ylabel(r'Aresta da massa $L$ $[\si{\milli\meter}]$')
+    ax2.legend(ncols=3)
+    plt.savefig(TESE_FOLDER+'otimizacao_parametrica_frequencia.pdf', format="pdf")
+    # plt.show()
 
 if __name__ == "__main__":
-    # Testando para algumas frequências de projeto
-    otimizar_acelerometro(f_alvo=1561.11)
-    # otimizar_acelerometro(f_alvo=1500)
-    # otimizar_acelerometro(f_alvo=2000)
+    plot_otimizacao_parametrica_frequencia()

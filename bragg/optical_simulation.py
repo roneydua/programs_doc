@@ -26,7 +26,7 @@ locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 # plt.style.use("default")
 plt.style.use("common_functions/roney3.mplstyle")
 cores = plt.rcParams["axes.prop_cycle"].by_key()["color"]
-TESE_FOLDER = "../tese/images/not_used_on_thesis"
+TESE_FOLDER = "../tese/images/used_on_thesis"
 FIG_L = 6.29
 # change for 16:10
 FIG_A = FIG_L / 1.6
@@ -148,9 +148,9 @@ def plot_bragg_spectrum():
             color=cores[p],
         )
     ax.vlines(bragg.wavelength_span_nm[index_of_1550_1],0,1,alpha=.25,colors=cores[3])
-    _plot(_r=bragg.calc_bragg(-0.0001), i=r"$d^{\prime}$",p=0)
+    _plot(_r=bragg.calc_bragg(-0.0001), i=r"$\varepsilon<0$", p=0)
     _plot(bragg.r0, r"$\varepsilon=0$", 1)
-    _plot(bragg.calc_bragg(0.0001), r"$d^{\prime\prime}$", 2)
+    _plot(bragg.calc_bragg(0.0001), r"$\varepsilon>0$", 2)
     ax.set_xlim(1549.5, 1550.5)
     plt.legend(ncols=3,
                bbox_to_anchor=(0, 1, 1, 0),

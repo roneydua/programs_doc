@@ -9,17 +9,6 @@ from scipy.spatial.transform import Rotation
 from modeling.accel_model import accel_model_euler_poincare
 from modeling.make_trajectories import generate_base_trajectories
 
-# def interpolate_trajectory(t: float, time_vector: np.ndarray, data: np.ndarray):
-#     """
-#     linear interpolation of trajectory data for the ode solver.
-#     """
-#     idx = np.searchsorted(time_vector, t) - 1
-#     idx = np.clip(idx, 0, len(time_vector) - 2)
-#     dt = time_vector[idx + 1] - time_vector[idx]
-#     w = (t - time_vector[idx]) / dt
-#     return (1.0 - w) * data[idx] + w * data[idx + 1]
-
-
 def find_initial_equilibrium(
     model: accel_model_euler_poincare,
     a_b_0: np.ndarray,
@@ -92,11 +81,11 @@ def dynamics_ode(
     omega_n_trans = np.sqrt(4.0 * model.k / model.seismic_mass)
     omega_n_rot = np.sqrt(4.0 * model.k * (model.seismic_edge / 2.0) ** 2 / model.i_m)
     # Amortecimento estrutural real da fibra óptica de sílica
-    damping_ratio = 0.00
+    # damping_ratio = 0.00
 
     # Adicionamos a força dissipativa (c * v) diretamente nas acelerações
-    a_rel_b -= 2.0 * damping_ratio * omega_n_trans * v_rel_b
-    dot_omega_rel_m -= 2.0 * damping_ratio * omega_n_rot * omega_rel_m
+    # a_rel_b -= 2.0 * damping_ratio * omega_n_trans * v_rel_b
+    # dot_omega_rel_m -= 2.0 * damping_ratio * omega_n_rot * omega_rel_m
     # -------------------------------------------
     # quaternion kinematics
     w_x, w_y, w_z = omega_rel_m
@@ -113,14 +102,14 @@ def dynamics_ode(
     return np.concatenate((v_rel_b, a_rel_b, q_dot, dot_omega_rel_m))
 
 
-def simulate_dynamics(t_end: float, dt: float):
+def simulate_dynamics(case:str,t_end: float, dt: float):
     """
     Gera a trajetória perfeita sob demanda, integra a dinâmica,
     extrai os comprimentos e salva com pandas.
     """
     # 1. Definir parâmetros de tempo e gerar a trajetória
-    print(f"generate trajectories with final time{t_end}s spaced by dt {dt}s")
-    df_traj = generate_base_trajectories(t_end=t_end, dt=dt)
+    print(f"generate trajectories with final time{t_end}s spaced by dt {dt}s with case {case}")
+    df_traj = generate_base_trajectories(case=case,t_end=t_end, dt=dt)
 
     # 2. Extrair dados para numpy arrays (necessário para o interpolador)
     time_vector = df_traj["time"].values
@@ -164,8 +153,8 @@ def simulate_dynamics(t_end: float, dt: float):
         t_eval=time_vector,
         max_step=1e-3,
         args=(model, interp_a, interp_omega, dot_omega_alpha, interp_g),
-        # rtol=1e-9,
-        # atol=1e-6,
+        rtol=1e-4,
+        atol=1e-6,
     )
 
     num_steps = len(sol.t)
@@ -205,9 +194,9 @@ def simulate_dynamics(t_end: float, dt: float):
         data_dict[f"fiber_{j+1}_length"] = fiber_lengths[:, j]
 
     df_sim = pd.DataFrame(data_dict)
-    save_data_pah = "./modeling/data/simulation_output.csv"
-    df_sim.to_csv(save_data_pah, index=False)
-    print(f"Dados da simulação salvos em {save_data_pah}")
+    save_data_pah = "./modeling/data/modeling.h5"
+    df_sim.to_hdf(save_data_pah, key=f"{case}/simulation", mode="a")
+    print(f"Dados da simulação salvos em {save_data_pah} (key: primeiro_teste/simulation)")
 
 
 if __name__ == "__main__":

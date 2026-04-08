@@ -31,7 +31,8 @@ class SystemDynamicsAnalyzer:
         r_b_m_0 = r_m_b_0.T
         
         # Constante de amortecimento de Rayleigh (Mesmo valor usado no modelo físico)
-        alpha_damping = 5e-5 
+        # alpha_damping = 5e-5 
+        alpha_damping = 2.2e-6
         
         for j in range(12):
             m_j = self.model.m_m[j]
@@ -124,7 +125,7 @@ class SystemDynamicsAnalyzer:
                 })
                 
         # Ordena pelos modos de menor frequência
-        modes = sorted(modes, key=lambda x: x["ω_n [rad/s]"])
+        modes = sorted(modes, key=lambda x: x["omega_n [rad/s]"])
         
         df_modes = pd.DataFrame(modes)
         df_modes.index.name = "Modo"
@@ -142,7 +143,7 @@ if __name__ == "__main__":
     
     pd.set_option('display.float_format', lambda x: f'{x:.4e}' if abs(x) < 1e-3 else f'{x:.4f}')
     print("-------------------------------------------------------------------------")
-    print("ANÁLISE ESTRUTURAL (Solução Analítica via Jacobiano - Kövecses)")
+    print("ANÁLISE ESTRUTURAL (Solução Analítica via Jacobiano - K\"{o}vecses)")
     print("-------------------------------------------------------------------------")
     print(df_results.to_string())
     print("-------------------------------------------------------------------------")

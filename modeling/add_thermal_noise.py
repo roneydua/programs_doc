@@ -3,17 +3,20 @@ import pandas as pd
 from modeling.accel_model import accel_model_euler_poincare
 from matplotlib import pyplot as plt
 
+
 def apply_thermokinematic_perturbation(
-    input_file="./modeling/data/simulation_output.csv",
-    output_file="./modeling/data/simulation_output_perturbed.csv",
-    noise_std=1e-9,  # standard deviation of the optical interrogator noise (e.g., 1 nm)
+    case: str,
+    apply_perturbation: bool = True,
+    input_file: str = "./modeling/data/modeling.h5",
+    output_file: str = "./modeling/data/modeling.h5",
+    noise_std:float=1e-9,  # standard deviation of the optical interrogator noise (e.g., 1 nm)
 ):
     """
     reads the clean kinematic simulation data, applies a time-varying thermal gradient,
     injects white gaussian noise, and exports the corrupted data to be read by the estimator.
     """
     print(f"loading clean simulation data from {input_file}...")
-    df_sim = pd.read_csv(input_file)
+    df_sim = pd.read_hdf(input_file, key=f"{case}/simulation")
     time = df_sim["time"].values
     num_steps = len(time)
 
@@ -36,8 +39,10 @@ def apply_thermokinematic_perturbation(
     # example: a linear ramp from 0 C to 30C
     # delta_t_profile = np.linspace(0.0, 30.0, num_steps)
 
-    delta_t_profile =50/time[-1] * time  * np.sin(2.0 * np.pi * 2.0 * time)
-
+    if apply_perturbation:
+        delta_t_profile =50/time[-1] * time  * np.sin(2.0 * np.pi * 2.0 * time)
+    else:
+        delta_t_profile = np.zeros(num_steps)
     df_perturbed = df_sim.copy()
 
     if plt.fignum_exists(3):
@@ -54,24 +59,28 @@ def apply_thermokinematic_perturbation(
 
         # generate white gaussian noise for this specific fiber
         white_noise = np.random.normal(loc=0.0, scale=noise_std, size=num_steps)
-
-        # superimpose the true kinematics with thermal error and noise
-        corrupted_lengths = clean_lengths + thermal_elongation + white_noise
-
+        if apply_perturbation:
+            # superimpose the true kinematics with thermal error and noise
+            corrupted_lengths = clean_lengths + thermal_elongation + white_noise
+        else:
+            corrupted_lengths = clean_lengths
         # overwrite the column with the corrupted data
         df_perturbed[col_name] = corrupted_lengths
         # _ax[j].plot(time, df_sim[col_name].values-l_0[j], label="clean")
         # _ax[j].plot(time, df_perturbed[col_name].values - l_0[j], label="perturbed")
         # _ax[j].set_ylabel(col_name)
         # _ax[j].legend()
-    # save the true temperature profile in the csv so we can plot and compare later!
+    # save the true temperature profile in the h5 so we can plot and compare later!
     df_perturbed["dT_true"] = delta_t_profile
     # plt.show()
-    df_perturbed.to_csv(output_file, index=False)
+    df_perturbed.to_hdf(
+        output_file, key=f"{case}/simulation_output_perturbed", mode="a"
+    )
     print(f"corrupted data successfully saved to {output_file}.")
-    print(f"applied K_T = {k_t:.4e} 1/°C with noise std = {noise_std:.1e} m.")
+    print(f"applied K_T = {k_t:.4e} 1/C with noise std = {noise_std:.1e} m.")
+
 
 if __name__ == "__main__":
     # execute the perturbation script
     # you can adjust the noise level here. 1e-9 meters = 1 nanometer resolution.
-    apply_thermokinematic_perturbation(noise_std=2e-9)
+    apply_thermokinematic_perturbation(case="perturbed", noise_std=2e-9)

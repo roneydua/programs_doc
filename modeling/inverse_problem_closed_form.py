@@ -103,12 +103,15 @@ class closed_form_estimator:
         return self.h_term_pinv @ delta_l
 
 
-def solve_inverse_problem_closed_form(mmq_mode:int):
+def solve_inverse_problem_closed_form(case: str, mmq_mode: int, active_fibers:list[int]):
     """
     estimates relative pose and recovers base accelerations using quasi-static assumption,
     driven by closed-form algebraic estimations.
     """
-    df_sim = pd.read_csv("./modeling/data/simulation_output_perturbed.csv")
+    df_sim = pd.read_hdf(
+        "./modeling/data/modeling.h5",
+        key=f"{case}/simulation_output_perturbed",
+    )
     time_vector = df_sim["time"].values
 
     length_columns = [f"fiber_{j+1}_length" for j in range(12)]
@@ -118,7 +121,8 @@ def solve_inverse_problem_closed_form(mmq_mode:int):
 
     # --- configuration parameters ---
     # active_fibers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    active_fibers = [0, 1,  4, 5,   8, 9,11]
+    
+    # active_fibers = [0, 1, 4, 5, 8, 9,10]
     # active_fibers = [0, 2, 4, 7, 8,10, 11]
 
     # 1: translational (3x3), 2: complete kinematic (6x6), 3: thermokinematic (7x7)
@@ -145,23 +149,21 @@ def solve_inverse_problem_closed_form(mmq_mode:int):
             r_rel_est = estimator.estimate_translational(measured_lengths)
             euler_est = np.zeros(3)
             dT_est = 0.0
-            filename = "./modeling/data/inverse_output_closed_form_translacional.csv"
+            group_name = "inverse_output_closed_form_translacional"
 
         elif mmq_mode == 2:
             x_est = estimator.estimate_complete(measured_lengths)
             r_rel_est = x_est[0:3]
             euler_est = x_est[3:6]
             dT_est = 0.0
-            filename = (
-                "./modeling/data/inverse_output_closed_form_translacional_angular.csv"
-            )
+            group_name = "inverse_output_closed_form_translacional_angular"
 
         elif mmq_mode == 3:
             x_est = estimator.estimate_thermokinematic(measured_lengths)
             r_rel_est = x_est[0:3]
             euler_est = x_est[3:6]
             dT_est = x_est[6]
-            filename = "./modeling/data/inverse_output_closed_form_translacional_angular_thermal.csv"
+            group_name = "inverse_output_closed_form_translacional_angular_thermal"
 
         # recreate the rotation matrix exactly as formulated in the linear model: R = I + skew(theta)
         theta_x, theta_y, theta_z = euler_est
@@ -175,7 +177,7 @@ def solve_inverse_problem_closed_form(mmq_mode:int):
         )
 
         # r_m_b_est = np.eye(3, dtype=np.float64) + skew_theta
-        r_m_b_est = Rotation.from_euler('xyz',euler_est).as_matrix()
+        r_m_b_est = Rotation.from_euler("xyz", euler_est).as_matrix()
 
         estimated_r_rel[i, :] = r_rel_est
         estimated_euler[i, :] = euler_est
@@ -190,7 +192,7 @@ def solve_inverse_problem_closed_form(mmq_mode:int):
         estimated_dot_omega_b[i, :] = dot_omega_b
         estimated_fiber_lengths[i, :] = fiber_lengths_model
 
-    # export data to csv
+    # export data to h5
     df_inv = pd.DataFrame(
         {
             "time": time_vector,
@@ -209,17 +211,19 @@ def solve_inverse_problem_closed_form(mmq_mode:int):
             "dT_true": df_sim["dT_true"],
         }
     )
-    if mmq_mode ==3:
-        df_inv["dT_est"] =  estimated_dT
+    if mmq_mode == 3:
+        df_inv["dT_est"] = estimated_dT
 
     for i in range(12):
         df_inv[f"fiber_{i+1}_length_est"] = estimated_fiber_lengths[:, i]
 
-    df_inv.to_csv(filename, index=False)
-    print(f"closed-form inverse problem solved. estimations saved to {filename}.")
+    df_inv.to_hdf(
+        "./modeling/data/modeling.h5", key=f"{case}/inverse_{group_name}", mode="a"
+    )
+    print(f"closed-form inverse problem solved. estimations saved to {group_name}.")
 
 
 if __name__ == "__main__":
-    solve_inverse_problem_closed_form(mmq_mode=1)
-    solve_inverse_problem_closed_form(mmq_mode=2)
-    solve_inverse_problem_closed_form(mmq_mode=3)
+    solve_inverse_problem_closed_form(mmq_mode=1, active_fibers=[0, 1, 4, 5, 8, 9, 11])
+    solve_inverse_problem_closed_form(mmq_mode=2, active_fibers=[0, 1, 4, 5, 8, 9, 11])
+    solve_inverse_problem_closed_form(mmq_mode=3, active_fibers=[0, 1, 4, 5, 8, 9, 11])

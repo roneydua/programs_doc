@@ -24,7 +24,7 @@ FIG_L = 6.29
 FIG_A = (90.0) / 25.4
 from scipy.ndimage import shift
 
-TESE_FOLDER = "../tese/images/not_used_on_thesis/"
+TESE_FOLDER = "./../tese/images/used_on_thesis/"
 
 
 class fbg_simulation(object):
@@ -33,7 +33,7 @@ class fbg_simulation(object):
         # date = "20240328"
         # fbg_name_d = "fbg12"
         # fbg_name_e = "fbg15"
-        date = ""
+        # date = ""
 
         w_fbg_e_ = f["fbg_production/" + date + "/" + fbg_name_d + "/wavelength_m"][:]
         "wavelength in meters"
@@ -102,7 +102,7 @@ class fbg_simulation(object):
 
 
 def power_vs_delta_lambda_animation_two_fibers():
-    fbgs = fbg_simulation(fbg_name_d="fbg12", fbg_name_e="fbg15")
+    fbgs = fbg_simulation(fbg_name_d="fbg12", fbg_name_e="fbg15",date='20240328')
     alpha = np.linspace(0.2, 1, 3)
     fig, ax = plt.subplots(
         2,
@@ -166,7 +166,7 @@ def power_vs_delta_lambda_animation_two_fibers():
 
 
 def power_vs_delta_lambda_animation_one_fiber():
-    fbgs = fbg_simulation(fbg_name_d="fbg12", fbg_name_e="fbg15")
+    fbgs = fbg_simulation(fbg_name_d="fbg12", fbg_name_e="fbg15",date='20240328')
     alpha = np.linspace(0.2, 1, 3)
     fig, ax = plt.subplots(
         2,
@@ -455,7 +455,7 @@ def acc_6_analysis(language="pt"):
 
 def linearity_analysis_acc_4(language:str):
     f = h5py.File("./phd_data.hdf5", "r")
-    ff = f["mounted_acc/acc_4/20260108/linearity_analysis"]
+    ff = f["mounted_acc/acc_4/20260108/linearity_analisys"]
     plot_texts = {
         "pt": {
             "domain_name": r"Fundo de escala [\si{\m\per\second\squared}]",

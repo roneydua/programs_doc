@@ -75,14 +75,14 @@ class optical_push_pull_estimator:
         return r_rel
 
 
-def solve_inverse_problem_optical_push_pull(push_pull_pairs:list, name_save:str):
+def solve_inverse_problem_optical_push_pull(case:str,push_pull_pairs:list[int], name_save:str):
     """
     recovers the specific force using the experimental optical push-pull setup.
     """
     # we load the PERTURBED data to prove that the optical setup rejects temperature
-    input_file = "./modeling/data/simulation_output_perturbed.csv"
+    input_file = f"./modeling/data/modeling.h5"
     try:
-        df_sim = pd.read_csv(input_file)
+        df_sim = pd.read_hdf(input_file, key=f"{case}/simulation_output_perturbed")
     except FileNotFoundError:
         print(f"File {input_file} not found. Please run add_thermal_noise.py first.")
         return
@@ -123,7 +123,7 @@ def solve_inverse_problem_optical_push_pull(push_pull_pairs:list, name_save:str)
         estimated_f_b[i, :] = f_b
         estimated_dot_omega_b[i, :] = dot_omega_b
         estimated_fiber_lengths[i, :] = fibers_lengths
-    # export data to csv
+    # export data to h5
     df_inv = pd.DataFrame({
         "time": time_vector,
         "f_b_est_x": estimated_f_b[:, 0],
@@ -142,11 +142,11 @@ def solve_inverse_problem_optical_push_pull(push_pull_pairs:list, name_save:str)
     })
     for i in range(12):
         df_inv[f"fiber_{i+1}_length_est"] = estimated_fiber_lengths[:, i]
-    # output_filename = "modeling/data/inverse_output_optical_push_pull.csv"
-    df_inv.to_csv(name_save, index=False)
+    # output_filename = "modeling/data/inverse_output_optical_push_pull.h5"
+    df_inv.to_hdf(input_file, key=f"{case}/{name_save}", mode="a")
     print(f"optical push-pull problem solved. estimations saved to {name_save}.")
 
 
 if __name__ == "__main__":
-    solve_inverse_problem_optical_push_pull(push_pull_pairs=[[0, 3], [4, 7], [8, 11]], name_save="modeling/data/inverse_output_optical_push_pull_cruzed.csv")
-    solve_inverse_problem_optical_push_pull(push_pull_pairs=[[0, 2], [4, 6], [8, 10]], name_save="modeling/data/inverse_output_optical_push_pull_aligned.csv")
+    solve_inverse_problem_optical_push_pull(push_pull_pairs=[[0, 3], [4, 7], [8, 11]], name_save="inverse_output_optical_push_pull_cruzed")
+    solve_inverse_problem_optical_push_pull(push_pull_pairs=[[0, 2], [4, 6], [8, 10]], name_save="inverse_output_optical_push_pull_aligned")

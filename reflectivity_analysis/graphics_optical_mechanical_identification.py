@@ -23,7 +23,7 @@ from common_functions.generic_functions import *
 # locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 plt.style.use("./common_functions/roney3.mplstyle")
 
-TESE_FOLDER = "../tese/images/not_used_on_thesis/"
+TESE_FOLDER = "./../tese/images/used_on_thesis/"
 
 my_colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 # plt.style.use("default")

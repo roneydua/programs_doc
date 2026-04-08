@@ -26,7 +26,7 @@ from bragg.bragg import Bragg
 plt.style.use("./common_functions/roney3.mplstyle")
 FIG_L = 6.29
 FIG_A = 1.5 * (90.0) / 25.4
-TESE_FOLDER = "../tese/images/not_used_on_thesis/"
+TESE_FOLDER = "./../tese/images/used_on_thesis/"
 
 class InterrogationClass(object):
     """docstring for Transmition."""

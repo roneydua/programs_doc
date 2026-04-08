@@ -16,12 +16,12 @@ from common_functions.generic_functions import mW_dbm
 
 # InteractiveShell.ast_node_interactivity = "all"
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
-my_colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 # plt.style.use("default")
 plt.style.use("common_functions/roney3.mplstyle")
+my_colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 FIG_L = 6.29
 FIG_A = (90.0) / 25.4
-
+TESE_FOLDER = "./../tese/images/used_on_thesis/"
 
 R0_REF = 0.04
 
@@ -45,9 +45,9 @@ def plot_error_comparision():
     error_dbm = [-.25,-0.15, 0.15,0.25]
     reflectivity_span = np.arange(0.1, 1.0, 0.01)
     # fig.clear()
-    def make_fig():
+    def make_fig(_num:float):
         fig, ax = plt.subplots(
-            1, 1, num=1, sharex=True, sharey=True, figsize=(
+            1, 1, num=_num, sharex=True, sharey=True, figsize=(
                 FIG_L, 0.75*FIG_A))
         ax.set_ylim(0, 1)
         ax.set_ylabel('Refletividade estimada')
@@ -62,7 +62,7 @@ def plot_error_comparision():
             r"\unit{\dbm}")
         ax.legend(ncols=5)
 
-    fig, ax = make_fig()
+    fig, ax = make_fig(_num=1)
     for i in error_dbm:
         _y = refletividade_case_1(
             error=i, diff_ref=mW_dbm(reflectivity_span + R0_REF) - mW_dbm(reflectivity_span))
@@ -74,9 +74,8 @@ def plot_error_comparision():
         mW_dbm(reflectivity_span))
     ax.plot(reflectivity_span, _y, ls=':', label="Exato")
     ax.legend(ncols=3)
-    plt.savefig("../tese/images/method_error_1.pdf", format="pdf")
-    plt.close(fig=1)
-    fig,ax = make_fig()
+    plt.savefig(TESE_FOLDER+"method_error_1.pdf", format="pdf")
+    fig,ax = make_fig(_num=2)
     for i in error_dbm:
         _y = refletividade_case_2(error=i, diff_ref=mW_dbm(reflectivity_span) -
                                   mW_dbm(R0_REF))
@@ -86,9 +85,9 @@ def plot_error_comparision():
         mW_dbm(R0_REF))
     ax.plot(reflectivity_span, _y, ls=':', label="Exato")
     ax.legend(ncols=3)
-    plt.savefig("../tese/images/method_error_2.pdf", format="pdf")
+    plt.savefig(TESE_FOLDER+"method_error_2.pdf", format="pdf")
     plt.close(fig=1)
-    fig, ax = make_fig()
+    fig, ax = make_fig(_num=3)
     for i in error_dbm:
         _y = refletividade_case_3(
             error=i, diff_ref=mW_dbm(
@@ -103,7 +102,7 @@ def plot_error_comparision():
     ax.legend(ncols=3)
 
     ax.plot(reflectivity_span, _y, ls=':', label="Exato")
-    plt.savefig("../tese/images/method_error_3.pdf", format="pdf")
+    plt.savefig(TESE_FOLDER+"method_error_3.pdf", format="pdf")
     plt.close(fig=1)
 
 
@@ -149,7 +148,7 @@ def plot_error_comparision_delta_r():
     )
     ax.plot(reflectivity_span, _y, ls=":", label="Exato")
     ax.legend(ncols=3)
-    plt.savefig("../tese/images/method_error_delta_r_reference_1.pdf", format="pdf")
+    plt.savefig(TESE_FOLDER+"method_error_delta_r_reference_1.pdf", format="pdf")
     plt.close(fig=1)
     # NOTE: There is no difference between the values ​​in both methods
     # fig, ax = make_fig()
@@ -163,7 +162,7 @@ def plot_error_comparision_delta_r():
     # )
     # ax.plot(reflectivity_span, _y, ls=":", label="Exato")
     # ax.legend(ncols=3)
-    # plt.savefig("../tese/images/method_error_delta_r_reference_2.pdf", format="pdf")
+    # plt.savefig(TESE_FOLDER+"method_error_delta_r_reference_2.pdf", format="pdf")
     # plt.close(fig=1)
 
 
