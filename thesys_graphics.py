@@ -13,7 +13,8 @@ from bragg.optical_simulation import (plot_bragg_spectrum,
                                       plot_drawFig6_spectres)
 from calibration_acc_methods.acc_calibration_4 import (
     calibration_with_temperature_dependency, linearity_analysis_20240828,
-    plot_allan_deviation_20240814)
+    plot_allan_deviation_20240814, plot_temperatura_graphic_allan, 
+    plot_fourier_transform)
 from fbg_production.fbg_graphics_production import \
     plot_graphics_with_pairs_acc_4
 from interrogation_analysis.interrogation_analysis import (
@@ -30,7 +31,7 @@ from modeling.otimization_of_model import \
 from reflectivity_analysis.graphics_optical_mechanical_identification import (
     identification_method_examples, plot_time_elapsed_fbg_production)
 from reflectivity_analysis.reflectivity_estimation_error import (
-    plot_error_comparision, plot_error_comparision_delta_r)
+    plot_error_comparison, plot_error_comparison_delta_r)
 
 
 def interrogation_chapter():
@@ -45,17 +46,19 @@ def interrogation_chapter():
 
 def reflectivity_chapter():
     "sec analise de refletividade"
-    plot_error_comparision()
+    plot_error_comparison()
     identification_method_examples()
-    plot_error_comparision_delta_r()
+    plot_error_comparison_delta_r()
 
 
 def result_chaper():
     "Cap. Resultados"
     linearity_analysis_acc_4("pt")
-    plot_graphics_with_pairs_acc_4('pt')
+    plot_graphics_with_pairs_acc_4("pt")  # fbg_acc_4_pt
     acc_4_analysis(language="pt")
-    plot_allan_deviation_20240814('pt')
+    plot_allan_deviation_20240814("pt")  # data_allan_deviation_acc_4_20240814
+    plot_fourier_transform("pt")  # fft_measurement_20240814_pt
+    plot_temperatura_graphic_allan("pt")
     calibration_with_temperature_dependency("pt", save_calibrated_data=False)
     linearity_analysis_20240828("pt")  # linearity_with_respect_to_full_scale
     plot_graphics("sinusoidal_with_temp_perturbation")

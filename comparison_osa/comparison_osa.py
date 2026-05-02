@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 '''
-@File    :   comparision_osa.py
+@File    :   comparison_osa.py
 @Time    :   2023/08/28 14:12:15
 @Author  :   Roney D. Silva
 @Contact :   roneyddasilva@gmail.com
@@ -24,7 +24,7 @@ FIG_A = (90.0) / 25.4
 
 
 f = h5py.File('phd_data.hdf5')
-ff = f['osa_comparision']
+ff = f['osa_comparison']
 advantest_1_hr = ff['advantest01/high_resolution']
 advantest_1_lr = ff['advantest01/low_resolution']
 advantest_1_hr = ff['advantest02/high_resolution']

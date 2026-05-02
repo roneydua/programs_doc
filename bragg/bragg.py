@@ -47,7 +47,7 @@ class Bragg(object):
             delta_span_wavelength: Span of wavelength to FBG analysis. Defaults to 10.
             diff_of_peak: another for to give a span of wavelength. Defaults to 1.
             number_of_grating_period_forced: Force number of period. Defaults to None.
-            wavelength_span: Vector of wavelength to facilite comparisions with another fbg. Defaults to None.
+            wavelength_span: Vector of wavelength to facilite comparisons with another fbg. Defaults to None.
         '''
 
         self.delta_n = delta_n

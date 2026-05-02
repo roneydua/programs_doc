@@ -11,16 +11,18 @@
     "popen",
     "variacao"
   ],
-  "python.defaultInterpreterPath": "./.venv/bin/python3.12",
+  "python.defaultInterpreterPath": "python/.venv/bin/python",
   "path-intellisense.absolutePathTo": "./",
   "jupyter.notebookFileRoot": "${workspaceFolder}/",
   "jupyter.interactiveWindow.codeLens.enable": true,
   "cSpell.ignoreWords": ["lawofs"],
-  
+  "ipython.StartupCommands": ["%load_ext autoreload", "%autoreload 2"],
+
   "terminal.integrated.env.linux": {
+    "PATH": "${workspaceFolder}/python/.venv/bin:${env:PATH}",
     "PYTHONPATH": "${workspaceFolder}"
   },
-  "python.envFile": "${workspaceFolder}/python/.venv",
+  "python.envFile": "${workspaceFolder}/.env",
   "pylint.args": [
     "--disable=C0116",
     "--disable=C0206",

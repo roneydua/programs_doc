@@ -32,7 +32,7 @@ def cuts_non_valid_data(x,y):
     else:
         return x, y
 
-def plot_error_comparision():
+def plot_error_comparison():
     def refletividade_case_1(error=0.0, diff_ref=3.0):
         return R0_REF / (10.0**(0.1 * (diff_ref + error)) - 1.0)
 
@@ -106,7 +106,7 @@ def plot_error_comparision():
     plt.close(fig=1)
 
 
-def plot_error_comparision_delta_r():
+def plot_error_comparison_delta_r():
     def refletividade_case_1_delta_r(error=1.0, diff_ref=3.0):
         return R0_REF*error / (10.0**(0.1 * (diff_ref)) - 1.0)
 
@@ -193,5 +193,5 @@ def nonlinearity_analysis():
 # dy = y.diff(x).expand().factor()
 # dy.subs({a:1,x:1.5})
 if __name__ == "__main__":
-    plot_error_comparision()
-    plot_error_comparision_delta_r()
+    plot_error_comparison()
+    plot_error_comparison_delta_r()

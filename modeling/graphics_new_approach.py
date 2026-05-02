@@ -165,7 +165,7 @@ class inverse_problem_visualizer:
             )
             ax[1, 0].plot(
                 self.time,
-                np.rad2deg(np.ndarray:self.omega_b_true[:, i]),
+                np.rad2deg(self.omega_b_true[:, i]),
                 label=f"${self.axis_labels[i]}$",
             )
             ax[2, 0].plot(
