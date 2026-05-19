@@ -343,8 +343,6 @@ def plot_power_vs_accel_complete_acc(
         fbgs = fbg_simulation(fbg_name_d=right_fbg, fbg_name_e=left_fbg)
 
         def compute_delta_lambda(dd_r: float, delta_T=0.0):
-            lambda_e = 1548.5e-9
-            lambda_d = 1551.75e-9
             lambda_d = fbgs.w_fbg_max_d
             lambda_e = fbgs.w_fbg_max_e
             pe = 0.23
@@ -378,14 +376,14 @@ def plot_power_vs_accel_complete_acc(
         ax.plot(dd_r_vec, pot_vec * 1e3, "-*", label=legend_name[row])
 
     # ax[1].set_ylabel(legend_name[row])
-    ax.axvspan(-20 * 9.81, 20 * 9.81, color="k", alpha=0.08)
+    ax.axvspan(-22 * 9.81, 22 * 9.81, color="k", alpha=0.08)
 
     fig.supylabel(texts["optical_power_mW"])
     ax.set_xlabel(texts["acceleration"])
     ax.legend()
     plt.savefig(TESE_FOLDER + fig_name_to_save + "_" + language + ".pdf", format="pdf")
     plt.close(fig=1)
-    print("to aqui")
+    
 
 def simulation_push_pull_symbolic():
     def gaussian_func(wavelength, wavelength_center, standart_deviation):
