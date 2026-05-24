@@ -86,3 +86,12 @@ if __name__ == "__main__":
                 reflectivity_chapter()
             elif name == "appends":
                 appends()
+            else:
+                print("ploting... nothing")
+                # plot_graphics_with_pairs_acc_4("pt")
+                # plot_allan_deviation_20240814("pt")
+                # plot_temperatura_graphic_allan(language="pt")  #
+                acc_4_analysis(language="pt")
+                # calibration_with_temperature_dependency(
+                    # "pt", save_calibrated_data=False
+                # )
