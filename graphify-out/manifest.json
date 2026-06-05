@@ -1,0 +1,794 @@
+{
+  "/media/Arquivos/Dropbox/doutorado/programs/article_graphics.py": {
+    "mtime": 1775396426.9077964,
+    "hash": "6fed337588d8002e417659e9563fa6d4"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/teste.py": {
+    "mtime": 1725396594.3219461,
+    "hash": "e9b9525d2776c443a555a6226e930c3e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/thesys_graphics.py": {
+    "mtime": 1779230606.9436512,
+    "hash": "b4cef53a95989c36b094453b49aa48be"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/__init__.py": {
+    "mtime": 1697597476.0,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/comparison_osa/txt_hdf5.py": {
+    "mtime": 1693829462.0,
+    "hash": "c8ad167f2a17468f570c5f0568070e0d"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/comparison_osa/comparison_osa.py": {
+    "mtime": 1777730666.5436275,
+    "hash": "0f6616ca44a496e23a00eed00dbcf7c8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/graphics_methods.py": {
+    "mtime": 1726508218.3150017,
+    "hash": "6f7dc1d97b61a6911533398d43701115"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/impressaoLatex.py": {
+    "mtime": 1715126911.398045,
+    "hash": "cca96317e7210424b8947196f296cd36"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/put_data_on_hdf.py": {
+    "mtime": 1775396441.2470644,
+    "hash": "0284bbfeb9834d882e754b70dbc0686a"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/generic_functions.py": {
+    "mtime": 1729353653.0968442,
+    "hash": "42ce84e1b6bbab90badd9f28a284ada7"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/__init__.py": {
+    "mtime": 1715126911.398045,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/quaternion_functions.py": {
+    "mtime": 1715126911.398045,
+    "hash": "2cfb826c12eec2d70ab8f5712fd0d9bf"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/RK.py": {
+    "mtime": 1715126911.398045,
+    "hash": "858ce93fa4e8ed03ab1599122f1ca245"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/QuatSymbolic.py": {
+    "mtime": 1730133439.2260928,
+    "hash": "39dbe42032e78d96df2d0b0ceb3bbd2a"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/common_functions/split_file.py": {
+    "mtime": 1724437554.4045866,
+    "hash": "34dba291461f58b810855488b2234798"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/__init__.py": {
+    "mtime": 1715084098.8496265,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/osa/AQ6370D.py": {
+    "mtime": 1715084098.8496265,
+    "hash": "79b73a507007db74846d3f1933e16c63"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/osa/advantest_Q8347.py": {
+    "mtime": 1725622773.1269166,
+    "hash": "49240e2cc0e3de2aeddc210337a6506c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/osa/acquisition_anritsu.py": {
+    "mtime": 1715084098.8496265,
+    "hash": "7a016a3326b3b477fec91b033d32a981"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/osa/acquisition_anritsu_old_15052023.py": {
+    "mtime": 1715084098.8496265,
+    "hash": "a3ddc9d10f40598dc20d795e8fa09bab"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/osa/get_one_sample.py": {
+    "mtime": 1717498660.4300835,
+    "hash": "7abc87a72540cf8cec6ffccffe9c5f6f"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/osa/graphics_accel_v1.py": {
+    "mtime": 1715084098.8496265,
+    "hash": "570be8e0895243738d9a266d7600b237"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/osa/Q8347.py": {
+    "mtime": 1715084098.8496265,
+    "hash": "7a864871e847ff21c7b9eebf3678612b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/graphic_dehidrogenation.py": {
+    "mtime": 1694620218.0,
+    "hash": "b72753f8cf628d173d619bc7aeb87aab"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/rot_table_comm/rot_table_comm.py": {
+    "mtime": 1730126924.1105385,
+    "hash": "526088b1c61341683938e63138c7d268"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/rot_table_comm/example.py": {
+    "mtime": 1721832062.2116117,
+    "hash": "58d5bcc9c436c3920b0d6e5c38c9df7c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dynamometer/auxiliary_classes.py": {
+    "mtime": 1715084098.8496265,
+    "hash": "65788d22ad2343033b4f148e5b50e146"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dynamometer/optical_mechanical_identification.py": {
+    "mtime": 1725622782.901609,
+    "hash": "e330d6b326944a65ef18471aa7dd36a8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/transimpedance_traction.py": {
+    "mtime": 1719234554.3826344,
+    "hash": "0d9d6bc03026253c6bcfa0da6d53a4ba"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/symbolic_analysis.py": {
+    "mtime": 1779143018.945144,
+    "hash": "3fef07e2135433ead2e9a8b70e944e80"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/accel_1.py": {
+    "mtime": 1712518711.0,
+    "hash": "d27c66bc0fab738693976e8a3b1a5394"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/transfer_function_verification.py": {
+    "mtime": 1779649677.9727278,
+    "hash": "6d565fc70cb79c3297d81fb4015d66f8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/transimpedance_static_analysis.py": {
+    "mtime": 1696438496.0,
+    "hash": "8a8a5b330dc6389ce6d9ae72b01f298a"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/__init__.py": {
+    "mtime": 1697597476.0,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/interrogation_analysis.py": {
+    "mtime": 1775488538.2135143,
+    "hash": "992f27ab03e3524d3f1465eaca714b93"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/common_functions_bragg_study.py": {
+    "mtime": 1775267019.1728165,
+    "hash": "9f74729b34b7015a4f15e3959465b5c7"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/push_pull_interrogation_analysis.py": {
+    "mtime": 1779231598.741692,
+    "hash": "d3e8f58170faf579335586c23076bbbb"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/interrogation_analysis/symbolic_analysis_graphics_schematic.py": {
+    "mtime": 1779557492.065512,
+    "hash": "783c5b47de5cc5f1f02e440b92b8bbfe"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/reflectivity_analysis/graphics_initial_indentification.py": {
+    "mtime": 1689031935.0,
+    "hash": "e294f7df0229c4a0dfda1f9fc4ac08ac"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/reflectivity_analysis/reflectivity_estimation_error.py": {
+    "mtime": 1777730669.4005466,
+    "hash": "dcfeb36c13d6e890853dbf1f40b5244c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/reflectivity_analysis/graphics_reflection_measurement.py": {
+    "mtime": 1689258229.0,
+    "hash": "7240f56200934f32edd4c3c5cfd04485"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/reflectivity_analysis/__init__.py": {
+    "mtime": 1697597476.0,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/reflectivity_analysis/graphics_optical_mechanical_identification.py": {
+    "mtime": 1775487868.9710104,
+    "hash": "d0a3160a7e6d9ce68748260bac81b59b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/bragg_analysis_various_fbg.py": {
+    "mtime": 1693238008.0,
+    "hash": "b643c8adb288be61ab32366aa854bb09"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/bragg.py": {
+    "mtime": 1779227573.6719983,
+    "hash": "52f20e142bb9537a1de15fe32adf6631"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/osa_interpratation.py": {
+    "mtime": 1775267013.9798594,
+    "hash": "6da4d1c2537534f7136bf42b0f354e14"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/optical_simulation.py": {
+    "mtime": 1775691842.24315,
+    "hash": "765c20bf232c634f1cd1be54f7aae655"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/pure_reflection_and_pure_transmission_analysis_Functions.py": {
+    "mtime": 1775487888.9193954,
+    "hash": "45431b3abdcb610245dd1250d0d0a665"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/__init__.py": {
+    "mtime": 1697597476.0,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/graphics_spectrum.py": {
+    "mtime": 1689106306.0,
+    "hash": "8bbd9e428d0d7a0e8369a076fe1e2a89"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/bragg/fbg_symbolic_analysis.py": {
+    "mtime": 1775396414.417169,
+    "hash": "1710bdd50eec25c0f0a7c8a737df97c8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/live_production.py": {
+    "mtime": 1715179811.1064687,
+    "hash": "8f946ef56c6bdc308bbbb5583a91c142"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fbg_graphics_production.py": {
+    "mtime": 1777165841.4385097,
+    "hash": "6f49df8b3493be1f91d96ed6fa8e15bf"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/__init__.py": {
+    "mtime": 1715088991.9922874,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fbgs_production_files.py": {
+    "mtime": 1723116332.020418,
+    "hash": "c037eaadfe70d6fea1434026bf73b509"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/calibration_acc_methods/automated_get_data.py": {
+    "mtime": 1722940579.0551732,
+    "hash": "5971c7a2c416e1b3b51c235cba39b546"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/calibration_acc_methods/acc_calibration_3.py": {
+    "mtime": 1712541729.7523048,
+    "hash": "04d6607a79ed1f1d6427dbb0e7390564"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/calibration_acc_methods/plot_acc_continuous.py": {
+    "mtime": 1721831606.7976463,
+    "hash": "e6c71811d1fc9ce1352b049532a42d4f"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/calibration_acc_methods/calibration.py": {
+    "mtime": 1724325654.8348982,
+    "hash": "6742c527db90fecec8f4efe41675a986"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/calibration_acc_methods/acc_calibration_4.py": {
+    "mtime": 1778510414.9562566,
+    "hash": "eb53b9d159b5570e755ab62242f67f1f"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/make_trajectories.py": {
+    "mtime": 1775250181.324306,
+    "hash": "5ae18ec8fd01c4d579c13c7f2feff0dd"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/inverse_problem_solution_conference_paper.py": {
+    "mtime": 1730126146.4198573,
+    "hash": "e2a17cd29af4a8684190613a0a896eef"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/linearization_of_model_new_approach.py": {
+    "mtime": 1775001458.0804322,
+    "hash": "f3808416f2acdc174354e48b048c6637"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/transimpedance_analisys.py": {
+    "mtime": 1689040416.0,
+    "hash": "be091fd166be40a16d4be883eb606577"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/numerical_modal_analysis.py": {
+    "mtime": 1774350945.2238793,
+    "hash": "6d2d908f9c8cc6d5e28a3f7057bff31b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/optical_push_pull.py": {
+    "mtime": 1774645723.8599327,
+    "hash": "ec009c774df7be832fa415c37020b34f"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/estimation_power_of_transimpedance.py": {
+    "mtime": 1775267021.8207948,
+    "hash": "fa50f4abe50736b42a91c97b196f621a"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/linearization_of_model.py": {
+    "mtime": 1774988226.4883165,
+    "hash": "fb7484106947d26b1b9f57507ac8a8a8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/add_thermal_noise.py": {
+    "mtime": 1774830104.7627437,
+    "hash": "7c060bc6a8c0df9f9467204c06b22830"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/main_dynamics.py": {
+    "mtime": 1775253453.454692,
+    "hash": "2d76614a9977dba6eca47e36085e3209"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/inverse_problem_solution.py": {
+    "mtime": 1775487891.417013,
+    "hash": "9871f3987161ba267ce5248bda5d1927"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/geometricSolutionAnalisys.py": {
+    "mtime": 1673269661.0,
+    "hash": "002d53396e3dcf2459d63e4ff5776a60"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/main_modeling.py": {
+    "mtime": 1775259259.1222115,
+    "hash": "f4c5e1f5633b3c446f933dee2688b471"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/analitycal_modal_analysis.py": {
+    "mtime": 1775087121.5421627,
+    "hash": "aef94a600f3a5285525c6cb8ce074fa4"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/exeperimental_plots.py": {
+    "mtime": 1775267022.6044168,
+    "hash": "ae11dddfdc92e57d3458db62a8b37ea3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/erbium_laser_graphics.py": {
+    "mtime": 1775267020.8341327,
+    "hash": "d243736902f1d21d458bf617f53b2a88"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/parametrization.py": {
+    "mtime": 1671043967.0,
+    "hash": "20d16a911ca471e818ddb429821d0731"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/modeling_2d_case.py": {
+    "mtime": 1699651302.0,
+    "hash": "a47761fb0fd73e17d80b03f1f2b06eef"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/__init__.py": {
+    "mtime": 1697597476.0,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/otimization_of_model.py": {
+    "mtime": 1775586044.269251,
+    "hash": "dbd7f927790f174c4aecb7891c7d1a0f"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/analytical_solution.py": {
+    "mtime": 1775126709.4134183,
+    "hash": "0a0fca7b64d153307435ca5579f90fa2"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/graphics_new_approach.py": {
+    "mtime": 1777082260.9824574,
+    "hash": "c39f8004717c27aabcc581565315c7dc"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/math_model_accel.py": {
+    "mtime": 1775398125.112222,
+    "hash": "b71d8d13f30815b94d590340d2d0c029"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/accel_model.py": {
+    "mtime": 1775077178.6568363,
+    "hash": "021e9bd5442203ab04994a6ebb751d4b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/trajectories.py": {
+    "mtime": 1750723512.1053228,
+    "hash": "42dc59550d35a4c67e467233500502e0"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/inverse_problem.py": {
+    "mtime": 1774443804.8703616,
+    "hash": "062f78fb7654d9d40d946cf9a03015ac"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/inverse_problem_closed_form.py": {
+    "mtime": 1774829984.5011694,
+    "hash": "b4cc9d618a0dc6774d559535bce83e83"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/graphics.py": {
+    "mtime": 1747868056.8570673,
+    "hash": "1cf793fe94db4a5340e50a07e8a9ff38"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/math_model_simulation.py": {
+    "mtime": 1732322968.1398978,
+    "hash": "9941c971749d5bfc08cce95f0f9a5448"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/GEMINI.md": {
+    "mtime": 1779649316.8988516,
+    "hash": "43c7140d30b4329986ac9578842360fe"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/README.md": {
+    "mtime": 1712520039.9380755,
+    "hash": "6ed4167b363121386330ae529480d105"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/requirements.txt": {
+    "mtime": 1777731333.1032531,
+    "hash": "f6c38a03f02e24fb46c585af2eaff101"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/requirements.txt": {
+    "mtime": 1715088763.7344024,
+    "hash": "fdf00ee04fa9c000cd1e671160bce1a2"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/source_dehydrogenated.txt": {
+    "mtime": 1694613655.0,
+    "hash": "d02629e98101d5b3641a8e3c96bc3be2"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/fbg_2.txt": {
+    "mtime": 1694544123.0,
+    "hash": "de20d52085582ab85b743cc49d974eeb"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/source.txt": {
+    "mtime": 1694544245.0,
+    "hash": "b0214a137fa3902310cbc5190fa44b30"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/fbg_1_dehydrogenated.txt": {
+    "mtime": 1694613823.0,
+    "hash": "d3c451a4bebb3ea0b79ece71fc62a7f3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/gabriel_osa/400nm_highres.txt": {
+    "mtime": 1717699064.2594059,
+    "hash": "7d86dcf37dbb9398de13de300c0b432c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/gabriel_osa/120nm_highres.txt": {
+    "mtime": 1717699116.2343152,
+    "hash": "607c0549f2a960ee08eea647c8b1e526"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/gabriel_osa/400nm_lowres.txt": {
+    "mtime": 1717699000.6287413,
+    "hash": "e12c9d14b57d2040b3face73da15700d"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/gabriel_osa/120nm_lowres.txt": {
+    "mtime": 1717699154.8535044,
+    "hash": "f35f237894d0e62a9588c494abb54d2b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/interrogation_test_20230918/fbg_1.txt": {
+    "mtime": 1695054189.0,
+    "hash": "0d9594d586209fb4773d31408356770b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/interrogation_test_20230918/fbg_2.txt": {
+    "mtime": 1695054310.0,
+    "hash": "160536da04f852203fdd2172d8206766"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/rot_table_comm/README.md": {
+    "mtime": 1723815002.431865,
+    "hash": "ab53239a9a85d335a202c37f76a2734c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/rot_table_comm/DOC.md": {
+    "mtime": 1721832062.2116117,
+    "hash": "7f1cdba791f9a32e2ac6c072763e53f0"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/rot_table_comm/requirements.txt": {
+    "mtime": 1721832062.2116117,
+    "hash": "b12918592740f16861d3934ea0180ac1"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/calibration_acc_methods/README.md": {
+    "mtime": 1712538357.2341928,
+    "hash": "ba69af99a4e7cd2c8cce343d8f41a5c6"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/modeling/readme.md": {
+    "mtime": 1753229235.1929092,
+    "hash": "9179ecc17d43a6ccff32835aa7da7bc3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20230913.pdf": {
+    "mtime": 1779231029.7976987,
+    "hash": "971ad8191b0cc971644dffda499d6ce3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130_fbg4__fbg9_.pdf": {
+    "mtime": 1702158941.0,
+    "hash": "f13091e2de092a66beae32a198712ce4"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231009.pdf": {
+    "mtime": 1697033695.0,
+    "hash": "2e2e1a000455319cba667513b1c80f33"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231010.pdf": {
+    "mtime": 1697046812.0,
+    "hash": "d7a915d1ae96ce5d61f0bb323104a9da"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130_fbg5__fbg13_.pdf": {
+    "mtime": 1701957923.0,
+    "hash": "1592d0af930d140908f20ca8ccb48172"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031.pdf": {
+    "mtime": 1698849550.0,
+    "hash": "bc31996c2f9f02174af49294543eaf02"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030.pdf": {
+    "mtime": 1698849368.0,
+    "hash": "b6b3f54fd6eccb43c047d5d00d04f560"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130_fbg3__fbg8_.pdf": {
+    "mtime": 1701956473.0,
+    "hash": "1e3a5ea34a67de3124ead96af94acca7"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130.pdf": {
+    "mtime": 1701956296.0,
+    "hash": "91bc2a741df0f783b8d05657f93434a4"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/manual_osa/aq6370c.pdf": {
+    "mtime": 1715088992.0922863,
+    "hash": "82373aeb3972f35823f854aec9373800"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/manual_osa/IMAQ6370D-01EN.pdf": {
+    "mtime": 1715088992.0762866,
+    "hash": "b82313cd150201de2a59e6f8d285ad7c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/source.png": {
+    "mtime": 1694544246.0,
+    "hash": "77e2390a7b6baa16c4ad756911755dec"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/source_dehydrogenated.png": {
+    "mtime": 1694613656.0,
+    "hash": "75a456d8a9448f7f52b715c500077fa5"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/fbg_1_dehydrogenated.png": {
+    "mtime": 1694613823.0,
+    "hash": "712221065a8f6f1693ee3164c5648512"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/fbg_2.png": {
+    "mtime": 1694544124.0,
+    "hash": "aea56a94959a2b15eb7f4df6f5d5af15"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/interrogation_test_20230918/fbg_1.png": {
+    "mtime": 1695054190.0,
+    "hash": "f18beee169b70af0b2d5ec134923e45b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/acquisitions/dataTemp/interrogation_test_20230918/fbg_2.png": {
+    "mtime": 1695054311.0,
+    "hash": "d6e32842ec0e980c1e248f2b52a8eb78"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20230913.png": {
+    "mtime": 1779231030.135635,
+    "hash": "c31629b393bfbd197a638f9e84f40443"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20240207.png": {
+    "mtime": 1710175317.91479,
+    "hash": "454da23685cbf3b9fa9ef772ff52a3cb"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20231010.png": {
+    "mtime": 1717701953.530768,
+    "hash": "dc965980cb58985685ac3cdf2a43e9b3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20231030.png": {
+    "mtime": 1717701939.3430657,
+    "hash": "7472f6bcee893247106734508f32b69e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20230921.png": {
+    "mtime": 1717701978.790238,
+    "hash": "cd4d742ef4a6d55a49671073c91e91cf"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20240328.png": {
+    "mtime": 1711647681.880412,
+    "hash": "79e9cd1abdf7b5c4878d3558ad79e68a"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/20231031.png": {
+    "mtime": 1717701875.2564108,
+    "hash": "72d08fcaac9ab17266ce8da313785b4c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg13.png": {
+    "mtime": 1701371926.0,
+    "hash": "db8f31349ccb0bb0e9cf9d84eb882bcb"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg2.png": {
+    "mtime": 1701352413.0,
+    "hash": "ff00ada64a05315633fc3e6f4017cd55"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg7.png": {
+    "mtime": 1701354449.0,
+    "hash": "60b84619573661a96e5675faefb78c64"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg12.png": {
+    "mtime": 1701371433.0,
+    "hash": "2bb82dacae53a63c23e52f59c2b85fa3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg9.png": {
+    "mtime": 1701369741.0,
+    "hash": "218cc9b8d6f283b0e349df39e283ea43"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg14.png": {
+    "mtime": 1701372040.0,
+    "hash": "278b9f0476e2a7a504b2ef92259987cd"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg4.png": {
+    "mtime": 1701353049.0,
+    "hash": "7ecafe247a9aaa19c43268b5ce401523"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg11.png": {
+    "mtime": 1701371250.0,
+    "hash": "118fdeb1565903780d9ff5bc4788e5f5"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg10.png": {
+    "mtime": 1701370936.0,
+    "hash": "283e32977fa4d1137da80f3fc2a01618"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg8.png": {
+    "mtime": 1701369382.0,
+    "hash": "237e517e823b0e1ccd80356872a3ba04"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg3.png": {
+    "mtime": 1701352924.0,
+    "hash": "bc04610f6f17d24ede7dd1848cf9461c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg1.png": {
+    "mtime": 1701351700.0,
+    "hash": "97b2f0d3439acb37eea146821664e5d9"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg5.png": {
+    "mtime": 1701353876.0,
+    "hash": "1bbf0a2746448e48127db8937d9e08d5"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231130/fbg6.png": {
+    "mtime": 1701354143.0,
+    "hash": "0ce29c048d22bf544879ea8271413eab"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg13.png": {
+    "mtime": 1707330289.0,
+    "hash": "fbb6127e6f900ab1c8818d6e2fb82ba8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg16.png": {
+    "mtime": 1707331741.0,
+    "hash": "b26cf2fabd0fe64f7bd8b14c6b1f09f3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg2.png": {
+    "mtime": 1707321132.0,
+    "hash": "5d63f31f82a8ec3ce494342ae3607173"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg7.png": {
+    "mtime": 1707325110.0,
+    "hash": "9667b6f3f42e9f9f22a0956cff3e7947"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg17.png": {
+    "mtime": 1707332353.0,
+    "hash": "9568674a80d8282646a3a2deef86e812"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg12.png": {
+    "mtime": 1707329667.0,
+    "hash": "44919cf90309e40bf7418d9df325d4f2"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg9.png": {
+    "mtime": 1707327960.0,
+    "hash": "09737f1ba745a0ea36013525bc4f60bd"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg14.png": {
+    "mtime": 1707330654.0,
+    "hash": "8955a1073942a9fb0dee7683a36dc106"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg4.png": {
+    "mtime": 1707322152.0,
+    "hash": "4da120fad01390ead259e83b2932c187"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg11.png": {
+    "mtime": 1707329013.0,
+    "hash": "b0786f016c1a0f464c4d2b2e6c3a3367"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg10.png": {
+    "mtime": 1707328479.0,
+    "hash": "79859244fc5932c42bd5d5e0f9ea5286"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg8.png": {
+    "mtime": 1707325472.0,
+    "hash": "f3e556f24284d3f819cae594af8a90dd"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg15.png": {
+    "mtime": 1707331256.0,
+    "hash": "9314ec302b9b09baa9e0806c1e3e5d44"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg3.png": {
+    "mtime": 1707321971.0,
+    "hash": "4a197ea84a7c28f63aa668f334676d38"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg1.png": {
+    "mtime": 1707320447.0,
+    "hash": "c0cdf3e6df03a0d235e44371c5deb503"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg5.png": {
+    "mtime": 1707324143.0,
+    "hash": "01574fc7de9c74bd682b86ddad62e604"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240207/fbg6.png": {
+    "mtime": 1707324588.0,
+    "hash": "5a5a00f086249b1025c832dcbc604745"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg2.png": {
+    "mtime": 1698759430.0,
+    "hash": "a1bbf2456ca5b478b53bd326de37ee51"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg7.png": {
+    "mtime": 1698762025.0,
+    "hash": "9236d985a0aba6a3b038abb21c55aa88"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg9.png": {
+    "mtime": 1698780321.0,
+    "hash": "cf83875a22a9b6a5c5f3a673e78d8f6a"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg4.png": {
+    "mtime": 1698760501.0,
+    "hash": "076f0440e8ccc0171c479111ea972491"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg11.png": {
+    "mtime": 1698782152.0,
+    "hash": "b71f8d0e90d0623dcee74d26609d13cf"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg10.png": {
+    "mtime": 1698781415.0,
+    "hash": "2cb29e92d14b2e24d711e7a09b766c19"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg8.png": {
+    "mtime": 1698763603.0,
+    "hash": "4e150146c7840081e0ee81036c617c40"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg3.png": {
+    "mtime": 1698759582.0,
+    "hash": "37c8356f45477250e2baf0af634782d6"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg1.png": {
+    "mtime": 1698758476.0,
+    "hash": "050b1b8409f285a0091f821bafabad3b"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg5.png": {
+    "mtime": 1698761197.0,
+    "hash": "1b95ce04a5ff244b56595da0275f8c13"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231031/fbg6.png": {
+    "mtime": 1698761618.0,
+    "hash": "ed33c06c53ffb93ac1772f86dd2d353f"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg13.png": {
+    "mtime": 1711645642.753144,
+    "hash": "e9374309323666bde79b9bd36ebb4ce8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg16.png": {
+    "mtime": 1711647676.916472,
+    "hash": "9c75a7ea86c4be2ee313371895bca257"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg7.png": {
+    "mtime": 1711641859.819027,
+    "hash": "e055e269bee76415ec0aabe08b242a4e"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg17.png": {
+    "mtime": 1711648053.719902,
+    "hash": "70afa04da375f619a7974bd4e2eb03e7"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg12.png": {
+    "mtime": 1711645208.802408,
+    "hash": "3a4e6ea7d82ee0273d7a15ac2bb14bb3"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg9.png": {
+    "mtime": 1711643041.188698,
+    "hash": "bf4c914b040bb929519d58aee3ade731"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg14.png": {
+    "mtime": 1711646386.468124,
+    "hash": "9fc9d272b5ac276724e58176d5ad54a7"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg18.png": {
+    "mtime": 1711649394.363642,
+    "hash": "035f1387cfde5e60ff63c994e4f5e791"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg4.png": {
+    "mtime": 1711639235.714854,
+    "hash": "03f5ac11553e8f8534aa44b42d7eb941"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg11.png": {
+    "mtime": 1711644636.161353,
+    "hash": "cde5158de3d36876c48b3e3c8ce29df0"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg10.png": {
+    "mtime": 1711644094.391924,
+    "hash": "cfb56ade987de47df8d89e53bf5ad025"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg8.png": {
+    "mtime": 1711642544.482723,
+    "hash": "06a90c442bafed236e628a229fcc39d2"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg15.png": {
+    "mtime": 1711647145.594917,
+    "hash": "e496914520e3f4e94e3b1107fc1807d0"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg3.png": {
+    "mtime": 1711638466.188187,
+    "hash": "7df83cf2775df594d0880250c072718d"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg5.png": {
+    "mtime": 1711639764.840436,
+    "hash": "b687597bebe53087b170c486bedc86dc"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20240328/fbg6.png": {
+    "mtime": 1711641263.330261,
+    "hash": "607308d5929714a685a850d649c4fd0c"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg2.png": {
+    "mtime": 1698686158.0,
+    "hash": "06a2d7fd3520ecc7e2594c1e5cac14e8"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg7.png": {
+    "mtime": 1698690094.0,
+    "hash": "d5ff3ef3d97a031c47fc9c40c28b30e4"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg4.png": {
+    "mtime": 1698687488.0,
+    "hash": "1f420209e0f7e23a0cf2b6b3c958c05f"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg8.png": {
+    "mtime": 1698690551.0,
+    "hash": "6c694a85ff33240bfb18c1f1bb742ffa"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg3.png": {
+    "mtime": 1698686621.0,
+    "hash": "f0b1b07c90efe4590fc298103aedfeab"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg1.png": {
+    "mtime": 1698685216.0,
+    "hash": "a74006d6328049a4a133e262550e2907"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg5.png": {
+    "mtime": 1698688144.0,
+    "hash": "caa1b67993b23fa1e5523e67f28277dd"
+  },
+  "/media/Arquivos/Dropbox/doutorado/programs/fbg_production/fig_production_figs/20231030/fbg6.png": {
+    "mtime": 1698689008.0,
+    "hash": "731f9db16bad0e84a6a18a87e878d1f4"
+  }
+}
