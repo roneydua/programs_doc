@@ -24,7 +24,8 @@ class fbg_simulation(object):
         self.w_fbg_e_interp = self.w_fbg_d_interp.copy()
 
         self.step_of_w_fbg = np.diff(self.w_fbg_d_interp).mean()
-        self.amplitude_w_by_m = 20e-3 / 50e-9
+        self.sld_total_power = 20e-3
+        self.amplitude_w_by_m = self.sld_total_power / 50e-9
 
         if use_ideal_model:
             # Parâmetros desejados para a validação teórica
@@ -614,7 +615,15 @@ def run_deformation_topology_comparison():
 
     # figure 1: laser
     fig_laser, ax_laser = plt.subplots(figsize=(FIG_L, FIG_A), dpi=144)
-    ax_laser_right = ax_laser.twinx()
+    ax_laser_dr = ax_laser.twinx()
+    ax_laser_tr = ax_laser.twinx()
+    ax_laser_dt = ax_laser.twinx()
+
+    # Offset the right spines of ax_laser_tr and ax_laser_dt
+    ax_laser_tr.spines["right"].set_position(("outward", 40))
+    ax_laser_dt.spines["right"].set_position(("outward", 80))
+
+    # FBG Única on ax_laser (left)
     ax_laser.plot(
         acceleration_g,
         np.array(num_laser_single) * 1e3,
@@ -631,8 +640,11 @@ def run_deformation_topology_comparison():
         linewidth=2,
         label="Ana: FBG Única",
     )
+    ax_laser.set_ylabel(r"FBG Única [\unit{\milli\watt}]", color=my_colors[0])
+    ax_laser.tick_params(axis='y', labelcolor=my_colors[0])
 
-    ax_laser.plot(
+    # Dupla Reflexão on ax_laser_dr
+    ax_laser_dr.plot(
         acceleration_g,
         np.array(num_laser_dr) * 1e3,
         color=my_colors[1],
@@ -640,7 +652,7 @@ def run_deformation_topology_comparison():
         alpha=0.5,
         label="Num: Dupla Reflexão",
     )
-    ax_laser.plot(
+    ax_laser_dr.plot(
         acceleration_g,
         np.array(ana_laser_dr) * 1e3,
         color=my_colors[1],
@@ -648,8 +660,11 @@ def run_deformation_topology_comparison():
         linewidth=2,
         label="Ana: Dupla Reflexão",
     )
+    ax_laser_dr.set_ylabel(r"Dupla Reflexão [\unit{\milli\watt}]", color=my_colors[1])
+    ax_laser_dr.tick_params(axis='y', labelcolor=my_colors[1])
 
-    ax_laser.plot(
+    # Transmissão-Reflexão on ax_laser_tr
+    ax_laser_tr.plot(
         acceleration_g,
         np.array(num_laser_tr) * 1e3,
         color=my_colors[2],
@@ -657,7 +672,7 @@ def run_deformation_topology_comparison():
         alpha=0.5,
         label="Num: Transmissão-Reflexão",
     )
-    ax_laser.plot(
+    ax_laser_tr.plot(
         acceleration_g,
         np.array(ana_laser_tr) * 1e3,
         color=my_colors[2],
@@ -665,8 +680,11 @@ def run_deformation_topology_comparison():
         linewidth=2,
         label="Ana: Transmissão-Reflexão",
     )
+    ax_laser_tr.set_ylabel(r"Transmissão-Reflexão [\unit{\milli\watt}]", color=my_colors[2])
+    ax_laser_tr.tick_params(axis='y', labelcolor=my_colors[2])
 
-    ax_laser.plot(
+    # Dupla Transmissão on ax_laser_dt
+    ax_laser_dt.plot(
         acceleration_g,
         np.array(num_laser_dt) * 1e3,
         color=my_colors[3],
@@ -674,7 +692,7 @@ def run_deformation_topology_comparison():
         alpha=0.5,
         label="Num: Dupla Transmissão",
     )
-    ax_laser.plot(
+    ax_laser_dt.plot(
         acceleration_g,
         np.array(ana_laser_dt) * 1e3,
         color=my_colors[3],
@@ -682,85 +700,113 @@ def run_deformation_topology_comparison():
         linewidth=2,
         label="Ana: Dupla Transmissão",
     )
+    ax_laser_dt.set_ylabel(r"Dupla Transmissão [\unit{\milli\watt}]", color=my_colors[3])
+    ax_laser_dt.tick_params(axis='y', labelcolor=my_colors[3])
 
     ax_laser.set_xlabel(r"Aceleração Inercial [$g$]")
-    ax_laser.set_ylabel(r"Potência Óptica [\unit{\milli\watt}]")
 
-    # ax_laser.legend(fontsize=8, loc="center left", bbox_to_anchor=(1, 0.5))
-    ax_laser.legend()
-    
+    # Legend consolidation
+    h1, l1 = ax_laser.get_legend_handles_labels()
+    h2, l2 = ax_laser_dr.get_legend_handles_labels()
+    h3, l3 = ax_laser_tr.get_legend_handles_labels()
+    h4, l4 = ax_laser_dt.get_legend_handles_labels()
+    # ax_laser.legend(h1 + h2 + h3 + h4, l1 + l2 + l3 + l4, loc='lower center', bbox_to_anchor=(0.5, 1.05), ncol=2, fontsize=8)
+    ax_laser_dr.spines["right"].set_visible(True)
+    ax_laser_tr.spines["right"].set_visible(True)
+    ax_laser_dt.spines["right"].set_visible(True)
+
     ax_laser.set_xlim(-10, 10)
     fig_laser.savefig(IMAGE_FOLDER+"transfer_function_laser_deformation.png",format="png")
 
     # figure 2: sld
     fig_sld, ax_sld = plt.subplots(figsize=(FIG_L, FIG_A), dpi=144)
-    ax_sld_twin = ax_sld.twinx()
-    ax_sld.plot(
-        acceleration_g,
-        np.array(num_sld_dr) * 1e3,
-        color=my_colors[0],
-        linewidth=4,
-        alpha=0.5,
-        label="Num: Dupla Reflexão",
-    )
-    ax_sld.plot(
-        acceleration_g,
-        ana_sld_dr * 1e3,
-        color=my_colors[0],
-        linestyle="--",
-        linewidth=2,
-        label="Ana: Dupla Reflexão",
-    )
+    ax_sld_tr = ax_sld.twinx()
+    ax_sld_dt = ax_sld.twinx()
 
-    ax_sld.plot(
-        acceleration_g,
-        np.array(num_sld_tr) * 1e3,
-        color=my_colors[1],
-        linewidth=4,
-        alpha=0.5,
-        label="Num: Transmissão-Reflexão",
-    )
-    ax_sld.plot(
-        acceleration_g,
-        ana_sld_tr * 1e3,
-        color=my_colors[1],
-        linestyle="--",
-        linewidth=2,
-        label="Ana: Transmissão-Reflexão",
-    )
+    # Offset the right spine of ax_sld_dt
+    ax_sld_dt.spines["right"].set_position(("outward", 40))
 
-    ax_sld_twin.plot(
-        acceleration_g,
-        np.array(num_sld_dt) * 1e3,
-        color=my_colors[2],
-        linewidth=4,
-        alpha=0.5,
-        label="Num: Dupla Transmissão",
+    # Dupla Reflexão on ax_sld (left)
+    ax_sld.plot(
+        acceleration_g, np.array(num_sld_dr) * 1e3,
+        color=my_colors[0], linewidth=4, alpha=0.5, label="Num: Dupla Reflexão",
     )
-    ax_sld_twin.plot(
-        acceleration_g,
-        ana_sld_dt * 1e3,
-        color=my_colors[2],
-        linestyle="--",
-        linewidth=2,
-        label="Ana: Dupla Transmissão",
+    ax_sld.plot(
+        acceleration_g, ana_sld_dr * 1e3,
+        color=my_colors[0], linestyle="--", linewidth=2, label="Ana: Dupla Reflexão",
     )
+    ax_sld.set_ylabel(r"Dupla Reflexão [\unit{\milli\watt}]", color=my_colors[0])
+    ax_sld.tick_params(axis='y', labelcolor=my_colors[0])
+
+    # Transmissão-Reflexão on ax_sld_tr
+    ax_sld_tr.plot(
+        acceleration_g, np.array(num_sld_tr) * 1e3,
+        color=my_colors[1], linewidth=4, alpha=0.5, label="Num: Transmissão-Reflexão",
+    )
+    ax_sld_tr.plot(
+        acceleration_g, ana_sld_tr * 1e3,
+        color=my_colors[1], linestyle="--", linewidth=2, label="Ana: Transmissão-Reflexão",
+    )
+    ax_sld_tr.set_ylabel(r"Transmissão-Reflexão [\unit{\milli\watt}]", color=my_colors[1])
+    ax_sld_tr.tick_params(axis='y', labelcolor=my_colors[1])
+
+    # Dupla Transmissão on ax_sld_dt
+    ax_sld_dt.plot(
+        acceleration_g, np.array(num_sld_dt) * 1e3,
+        color=my_colors[2], linewidth=4, alpha=0.5, label="Num: Dupla Transmissão",
+    )
+    ax_sld_dt.plot(
+        acceleration_g, ana_sld_dt * 1e3,
+        color=my_colors[2], linestyle="--", linewidth=2, label="Ana: Dupla Transmissão",
+    )
+    ax_sld_dt.set_ylabel(r"Dupla Transmissão [\unit{\milli\watt}]", color=my_colors[2])
+    ax_sld_dt.tick_params(axis='y', labelcolor=my_colors[2])
 
     ax_sld.set_xlabel(r"Aceleração Inercial [$g$]")
-    ax_sld.set_ylabel(r"Potência Óptica [\unit{\milli\watt}]")
-    ax_sld_twin.set_ylabel(r"Potência óptica (Transmissão) [\unit{\milli\watt}]", color=my_colors[2])
-    # ax_sld.legend()
-    ax_sld_twin.spines["right"].set_visible(True)
-
-    lines_l, labels_l = ax_sld.get_legend_handles_labels()
-    lines_r, labels_r = ax_sld_twin.get_legend_handles_labels()
-    ax_sld_twin.legend(
-        lines_l + lines_r,
-        labels_l + labels_r,
-    )
-    
+    ax_sld.set_ylim(bottom=0)
+    # Legend consolidation
+    h1, l1 = ax_sld.get_legend_handles_labels()
+    h2, l2 = ax_sld_tr.get_legend_handles_labels()
+    h3, l3 = ax_sld_dt.get_legend_handles_labels()
+    # ax_sld.legend(h1 + h2 + h3, l1 + l2 + l3, loc='lower center', bbox_to_anchor=(0.5, 1.05), ncol=2, fontsize=8)
+    ax_sld_tr.spines["right"].set_visible(True)
+    ax_sld_dt.spines["right"].set_visible(True)
     ax_sld.set_xlim(-10,10)
     fig_sld.savefig(IMAGE_FOLDER+"transfer_function_sld_deformation.png",format="png")
+    # Sensitivity calculation and CSV generation
+    # We evaluate exactly at -10g, 0g, and +10g for precision
+    def get_topology_powers(g_val):
+        s = g_val * accel_sensitivity_per_fbg
+        sim.translate_fbgs(s)
+        return {
+            "laser_dr": sim.p_dr_laser_num,
+            "laser_tr": sim.p_tr_laser_num,
+            "laser_dt": sim.p_dt_laser_num,
+            "sld_dr": sim.p_dr_num,
+            "sld_tr": sim.p_tr_num,
+            "sld_dt": sim.p_dt_num,
+        }
+
+    p_m10 = get_topology_powers(-10.0)
+    p_0g = get_topology_powers(0.0)
+    p_p10 = get_topology_powers(10.0)
+
+    for source in ["laser", "sld"]:
+        print(source.upper())
+        print("topo\t source\t delta_p\t p_dc\t  p_dc/p_s\t delta_p/p_dc")
+        p_s = sim.a_l if source == "laser" else sim.sld_total_power
+        for topo in ["dr", "tr", "dt"]:
+            key = f"{source}_{topo}"
+            p_dc = p_0g[key]
+            delta_p = np.abs(p_p10[key] - p_m10[key])
+
+            # p_dc_over_dp = p_dc / delta_p if delta_p != 0 else np.inf
+            p_dc_over_ps = p_dc / p_s
+            dp_over_pdc = delta_p / p_dc
+
+            print(
+                f"{topo.upper()}\t {source}\t {1e6*delta_p:.6e}\t {1e6*p_dc:.6e}\t {100*p_dc_over_ps:.6f}\t {100*dp_over_pdc:.6f}"
+            )
 
 
 def run_temperature_sweep_comparison():
@@ -820,6 +866,15 @@ def run_temperature_sweep_comparison():
 
     # figure 1: laser
     fig_laser, ax_laser = plt.subplots(figsize=(FIG_L, FIG_A), dpi=144)
+    ax_laser_dr = ax_laser.twinx()
+    ax_laser_tr = ax_laser.twinx()
+    ax_laser_dt = ax_laser.twinx()
+
+    # Offset the right spines of ax_laser_tr and ax_laser_dt
+    ax_laser_tr.spines["right"].set_position(("outward", 40))
+    ax_laser_dt.spines["right"].set_position(("outward", 80))
+
+    # FBG Única on ax_laser (left)
     ax_laser.plot(
         temperatures,
         np.array(num_laser_single) * 1e3,
@@ -836,8 +891,11 @@ def run_temperature_sweep_comparison():
         linewidth=2,
         label="Ana: FBG Única",
     )
+    ax_laser.set_ylabel(r"FBG Única [\unit{\milli\watt}]", color=my_colors[0])
+    ax_laser.tick_params(axis="y", labelcolor=my_colors[0])
 
-    ax_laser.plot(
+    # Dupla Reflexão on ax_laser_dr
+    ax_laser_dr.plot(
         temperatures,
         np.array(num_laser_dr) * 1e3,
         color=my_colors[1],
@@ -845,7 +903,7 @@ def run_temperature_sweep_comparison():
         alpha=0.5,
         label="Num: Dupla Reflexão",
     )
-    ax_laser.plot(
+    ax_laser_dr.plot(
         temperatures,
         np.array(ana_laser_dr) * 1e3,
         color=my_colors[1],
@@ -853,8 +911,11 @@ def run_temperature_sweep_comparison():
         linewidth=2,
         label="Ana: Dupla Reflexão",
     )
+    ax_laser_dr.set_ylabel(r"Dupla Reflexão [\unit{\milli\watt}]", color=my_colors[1])
+    ax_laser_dr.tick_params(axis="y", labelcolor=my_colors[1])
 
-    ax_laser.plot(
+    # Transmissão-Reflexão on ax_laser_tr
+    ax_laser_tr.plot(
         temperatures,
         np.array(num_laser_tr) * 1e3,
         color=my_colors[2],
@@ -862,7 +923,7 @@ def run_temperature_sweep_comparison():
         alpha=0.5,
         label="Num: Transmissão-Reflexão",
     )
-    ax_laser.plot(
+    ax_laser_tr.plot(
         temperatures,
         np.array(ana_laser_tr) * 1e3,
         color=my_colors[2],
@@ -870,8 +931,13 @@ def run_temperature_sweep_comparison():
         linewidth=2,
         label="Ana: Transmissão-Reflexão",
     )
+    ax_laser_tr.set_ylabel(
+        r"Transmissão-Reflexão [\unit{\milli\watt}]", color=my_colors[2]
+    )
+    ax_laser_tr.tick_params(axis="y", labelcolor=my_colors[2])
 
-    ax_laser.plot(
+    # Dupla Transmissão on ax_laser_dt
+    ax_laser_dt.plot(
         temperatures,
         np.array(num_laser_dt) * 1e3,
         color=my_colors[3],
@@ -879,7 +945,7 @@ def run_temperature_sweep_comparison():
         alpha=0.5,
         label="Num: Dupla Transmissão",
     )
-    ax_laser.plot(
+    ax_laser_dt.plot(
         temperatures,
         np.array(ana_laser_dt) * 1e3,
         color=my_colors[3],
@@ -887,19 +953,29 @@ def run_temperature_sweep_comparison():
         linewidth=2,
         label="Ana: Dupla Transmissão",
     )
-
-    ax_laser.set_xlabel(
-        r"Variação de temperatura $\Delta T$ [\unit{\degreeCelsius}]"
+    ax_laser_dt.set_ylabel(
+        r"Dupla Transmissão [\unit{\milli\watt}]", color=my_colors[3]
     )
-    ax_laser.set_ylabel(r"Potência óptica [\unit{\milli\watt}]")
-    # ax_laser.legend(fontsize=8, loc="center left", bbox_to_anchor=(1, 0.5))
-    ax_laser.legend()
-    fig_laser.savefig(IMAGE_FOLDER+"laser_vs_temperature_interrogation_analysis.png", format="png")
+    ax_laser_dt.tick_params(axis="y", labelcolor=my_colors[3])
+
+    ax_laser.set_xlabel(r"Variação de temperatura $\Delta T$ [\unit{\degreeCelsius}]")
+
+    ax_laser_dr.spines["right"].set_visible(True)
+    ax_laser_tr.spines["right"].set_visible(True)
+    ax_laser_dt.spines["right"].set_visible(True)
+    fig_laser.savefig(
+        IMAGE_FOLDER + "laser_vs_temperature_interrogation_analysis.png", format="png"
+    )
 
     # figure 2: sld
     fig_sld, ax_sld = plt.subplots(figsize=(FIG_L, FIG_A), dpi=144)
-    ax_sld_twin = ax_sld.twinx()
+    ax_sld_tr = ax_sld.twinx()
+    ax_sld_dt = ax_sld.twinx()
 
+    # Offset the right spine of ax_sld_dt
+    ax_sld_dt.spines["right"].set_position(("outward", 40))
+
+    # Dupla Reflexão on ax_sld (left)
     ax_sld.plot(
         temperatures,
         np.array(num_sld_dr) * 1e3,
@@ -916,8 +992,11 @@ def run_temperature_sweep_comparison():
         linewidth=2,
         label="Ana: Dupla Reflexão",
     )
+    ax_sld.set_ylabel(r"Dupla Reflexão [\unit{\milli\watt}]", color=my_colors[0])
+    ax_sld.tick_params(axis="y", labelcolor=my_colors[0])
 
-    ax_sld.plot(
+    # Transmissão-Reflexão on ax_sld_tr
+    ax_sld_tr.plot(
         temperatures,
         np.array(num_sld_tr) * 1e3,
         color=my_colors[1],
@@ -925,7 +1004,7 @@ def run_temperature_sweep_comparison():
         alpha=0.5,
         label="Num: Transmissão-Reflexão",
     )
-    ax_sld.plot(
+    ax_sld_tr.plot(
         temperatures,
         ana_sld_tr * 1e3,
         color=my_colors[1],
@@ -933,8 +1012,13 @@ def run_temperature_sweep_comparison():
         linewidth=2,
         label="Ana: Transmissão-Reflexão",
     )
+    ax_sld_tr.set_ylabel(
+        r"Transmissão-Reflexão [\unit{\milli\watt}]", color=my_colors[1]
+    )
+    ax_sld_tr.tick_params(axis="y", labelcolor=my_colors[1])
 
-    ax_sld_twin.plot(
+    # Dupla Transmissão on ax_sld_dt
+    ax_sld_dt.plot(
         temperatures,
         np.array(num_sld_dt) * 1e3,
         color=my_colors[2],
@@ -942,7 +1026,7 @@ def run_temperature_sweep_comparison():
         alpha=0.5,
         label="Num: Dupla Transmissão",
     )
-    ax_sld_twin.plot(
+    ax_sld_dt.plot(
         temperatures,
         ana_sld_dt * 1e3,
         color=my_colors[2],
@@ -950,31 +1034,16 @@ def run_temperature_sweep_comparison():
         linewidth=2,
         label="Ana: Dupla Transmissão",
     )
+    ax_sld_dt.set_ylabel(r"Dupla Transmissão [\unit{\milli\watt}]", color=my_colors[2])
+    ax_sld_dt.tick_params(axis="y", labelcolor=my_colors[2])
 
-    # merge legends from both axes
-    lines_l_sld, labels_l_sld = ax_sld.get_legend_handles_labels()
-    lines_r_sld, labels_r_sld = ax_sld_twin.get_legend_handles_labels()
-    ax_sld_twin.legend(
-        lines_l_sld + lines_r_sld,
-        labels_l_sld + labels_r_sld,
-    )
-    ax_sld_twin.set_ylabel(r"Potência óptica (Transmissão) [\unit{\milli\watt}]", color=my_colors[2])
-    # ax_sld.legend()
-    ax_sld_twin.spines["right"].set_visible(True)
+    ax_sld.set_xlabel(r"Variação de temperatura $\Delta T$ [\unit{\degreeCelsius}]")
+    ax_sld_tr.spines["right"].set_visible(True)
+    ax_sld_dt.spines["right"].set_visible(True)
 
-    lines_l, labels_l = ax_sld.get_legend_handles_labels()
-    lines_r, labels_r = ax_sld_twin.get_legend_handles_labels()
-    ax_sld_twin.legend(
-        lines_l + lines_r,
-        labels_l + labels_r,
+    fig_sld.savefig(
+        IMAGE_FOLDER + "sld_vs_temerature_interrogation_analysis.png", format="png"
     )
-    ax_sld.set_xlabel(
-        r"Variação de temperatura $\Delta T$ [\unit{\degreeCelsius}]"
-    )
-    ax_sld.set_ylabel(r"Potência óptica [\unit{\milli\watt}]")
-    # ax_sld.legend(fontsize=8, loc="center left", bbox_to_anchor=(1, 0.5))
-
-    fig_sld.savefig(IMAGE_FOLDER+"sld_vs_temerature_interrogation_analysis.png", format="png")
 
 
 def plot_linear_approximation():
@@ -982,6 +1051,6 @@ def plot_linear_approximation():
     sim.plot_linear_approximation()
 
 if __name__ == "__main__":
-    run_temperature_sweep_comparison()
+    # run_temperature_sweep_comparison()
     run_deformation_topology_comparison()
-    plot_linear_approximation()
+    # plot_linear_approximation()
