@@ -777,26 +777,37 @@ def run_deformation_topology_comparison():
     # We evaluate exactly at -10g, 0g, and +10g for precision
     def get_topology_powers(g_val):
         s = g_val * accel_sensitivity_per_fbg
-        sim.translate_fbgs(s)
+        # Laser analytical
+        p_s, p_dr, p_tr, p_dt = sim.compute_analytical_laser_power(s)
+
+        # SLD analytical
+        ana_sld_cross_val = sim.compute_analytical_cross_integral(s)
+        sld_dr = (1 / 16) * ana_sld_cross_val
+        sld_tr = (1 / 4) * (area_fbg - ana_sld_cross_val)
+        sld_dt = span_total - 2 * area_fbg + ana_sld_cross_val
+
         return {
-            "laser_dr": sim.p_dr_laser_num,
-            "laser_tr": sim.p_tr_laser_num,
-            "laser_dt": sim.p_dt_laser_num,
-            "sld_dr": sim.p_dr_num,
-            "sld_tr": sim.p_tr_num,
-            "sld_dt": sim.p_dt_num,
+            "laser_single": p_s,
+            "laser_dr": p_dr,
+            "laser_tr": p_tr,
+            "laser_dt": p_dt,
+            "sld_dr": sld_dr,
+            "sld_tr": sld_tr,
+            "sld_dt": sld_dt,
         }
 
     p_m10 = get_topology_powers(-10.0)
     p_0g = get_topology_powers(0.0)
     p_p10 = get_topology_powers(10.0)
 
-    for source in ["laser", "sld"]:
+    for source in ["sld","laser"]:
         print(source.upper())
-        print("topo\t source\t delta_p\t p_dc\t  p_dc/p_s\t delta_p/p_dc")
+        print("topo\t source\t delta_p\t p_dc\t\t  p_dc/p_s\t delta_p/p_dc")
         p_s = sim.a_l if source == "laser" else sim.sld_total_power
-        for topo in ["dr", "tr", "dt"]:
+        for topo in ["single", "dr", "tr", "dt"]:
             key = f"{source}_{topo}"
+            if key == "sld_single":
+                continue
             p_dc = p_0g[key]
             delta_p = np.abs(p_p10[key] - p_m10[key])
 
@@ -805,7 +816,7 @@ def run_deformation_topology_comparison():
             dp_over_pdc = delta_p / p_dc
 
             print(
-                f"{topo.upper()}\t {source}\t {1e6*delta_p:.6e}\t {1e6*p_dc:.6e}\t {100*p_dc_over_ps:.6f}\t {100*dp_over_pdc:.6f}"
+                f"{topo.upper()}\t {source}\t {1e6*delta_p:.5f}\t {1e6*p_dc:.5f}\t {100*p_dc_over_ps:.5f}\t {100*dp_over_pdc:.5f}"
             )
 
 
@@ -1045,12 +1056,42 @@ def run_temperature_sweep_comparison():
         IMAGE_FOLDER + "sld_vs_temerature_interrogation_analysis.png", format="png"
     )
 
+    # Sensitivity calculation for Laser vs Temperature
+    def get_temp_powers(temp_val):
+        # Laser analytical
+        p_s, p_dr, p_tr, p_dt = sim.compute_analytical_laser_power(fixed_shift_val, delta_t=temp_val)
+        return {
+            "laser_single": p_s,
+            "laser_dr": p_dr,
+            "laser_tr": p_tr,
+            "laser_dt": p_dt,
+        }
+
+    p_m20 = get_temp_powers(-20.0)
+    p_0c = get_temp_powers(0.0)
+    p_p40 = get_temp_powers(40.0)
+
+    print("\nLASER TEMPERATURE SENSITIVITY (-20C to 40C)")
+    print("topo\t source\t delta_p\t p_dc\t  p_dc/p_s\t delta_p/p_dc")
+    p_source = sim.a_l
+    for topo in ["single", "dr", "tr", "dt"]:
+        key = f"laser_{topo}"
+        p_dc = p_0c[key]
+        delta_p = np.abs(p_p40[key] - p_m20[key])
+
+        p_dc_over_ps = p_dc / p_source
+        dp_over_pdc = delta_p / p_dc if p_dc != 0 else 0
+
+        print(
+            f"{topo.upper()}\t LASER\t {1e6*delta_p:.6e}\t {1e6*p_dc:.6e}\t {100*p_dc_over_ps:.6f}\t {100*dp_over_pdc:.6f}"
+        )
+
 
 def plot_linear_approximation():
     sim = fbg_simulation("20240207/fbg9", "20231130/fbg7", use_ideal_model=True)
     sim.plot_linear_approximation()
 
 if __name__ == "__main__":
-    # run_temperature_sweep_comparison()
+    run_temperature_sweep_comparison()
     run_deformation_topology_comparison()
     # plot_linear_approximation()
