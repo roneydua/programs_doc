@@ -567,8 +567,8 @@ class fbg_simulation(object):
 def run_deformation_topology_comparison():
     sim = fbg_simulation("20240207/fbg9", "20231130/fbg7", use_ideal_model=True)
 
-    shifts = np.linspace(-1e-9, 1e-9, 50)
     accel_sensitivity_per_fbg = (83e-12) / 2.0
+    shifts = np.linspace(-10*accel_sensitivity_per_fbg, 10*accel_sensitivity_per_fbg, 50)
 
     # arrays for laser
     num_laser_single, num_laser_dr, num_laser_tr, num_laser_dt = [], [], [], []
@@ -700,6 +700,7 @@ def run_deformation_topology_comparison():
         linewidth=2,
         label="Ana: Dupla Transmissão",
     )
+    
     ax_laser_dt.set_ylabel(r"Dupla Transmissão [\unit{\milli\watt}]", color=my_colors[3])
     ax_laser_dt.tick_params(axis='y', labelcolor=my_colors[3])
 
@@ -715,7 +716,12 @@ def run_deformation_topology_comparison():
     ax_laser_tr.spines["right"].set_visible(True)
     ax_laser_dt.spines["right"].set_visible(True)
 
-    ax_laser.set_xlim(-10, 10)
+    # ax_laser.set_xlim(-10, 10)
+    # ax_laser.relim()
+    # ax_laser.autoscale_view( scaley=True)
+    # ax_laser.set_ylim(0.6,1.1)
+    
+
     fig_laser.savefig(IMAGE_FOLDER+"transfer_function_laser_deformation.png",format="png")
 
     # figure 2: sld
@@ -1092,6 +1098,6 @@ def plot_linear_approximation():
     sim.plot_linear_approximation()
 
 if __name__ == "__main__":
+    # run_deformation_topology_comparison()
     run_temperature_sweep_comparison()
-    run_deformation_topology_comparison()
     # plot_linear_approximation()
