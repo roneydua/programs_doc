@@ -1,4 +1,5 @@
 /docs
+modeling/data/
 modeling/__pycache__
 bragg/__pycache__/bragg.cpython-310.pyc
 common_functions/__pycache__
