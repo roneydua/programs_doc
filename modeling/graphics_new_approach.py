@@ -567,11 +567,11 @@ def plot_graphics(case: str):
     #     label="3-DOF",
     #     filepath="./modeling/data/inverse_output_closed_form_translacional.h5",
     # )
+    # visualizer.add_estimation(
+    #     key="inverse_inverse_output_closed_form_translacional_angular", label="6-GDL"
+    # )
     visualizer.add_estimation(
-        key="inverse_inverse_output_closed_form_translacional_angular", label="6-DOF"
-    )
-    visualizer.add_estimation(
-        label="7-DOF",
+        label="7-GDL",
         key="inverse_inverse_output_closed_form_translacional_angular_thermal",
     )
 
@@ -583,6 +583,10 @@ def plot_graphics(case: str):
         label="\\emph{Push-pull} alinhado",
         key="inverse_output_optical_push_pull_aligned",
     )
+    visualizer.add_estimation(
+        label="12-GDL",
+        key="inverse_inverse_output_closed_form_12dof",
+    )
     # visualizer.add_estimation(label="Levenberg-Marquardt", key="inverse_output_lm.h5")
 
     # generate and show all plots
@@ -593,59 +597,3 @@ if __name__ == "__main__":
     plot_graphics("sinusoidal_with_temp_perturbation")
 
 
-#
-
-# # Nova Paleta 'Synthwave Legível' para Fundo Branco
-# revised_white_bg_palette = [
-#     "#10002B",  # Deep Purple Base (quase preto)
-#     "#FF007F",  # Fúcsia Elétrico
-#     "#FFD700",  # Ouro Elétrico Rico
-#     "#00E6F0",  # Ciano Elétrico Saturado
-#     "#7D00FF",  # Ultravioleta Elétrico (subst. Lavanda)
-#     "#00C853",  # Esmeralda Profundo (subst. Verde Claro)
-#     "#FF6E40",  # Coral Elétrico (uma nova cor para mais distinção)
-#     "#26A69A",  # Turquesa Profundo
-# ]
-
-# pastel_synth_palette = [
-#     '#BDE0FE', # Fundo Base (Azul-pó Pastel)
-#     '#FFDFB4', # Fundo Topo (Pêssego Pastel)
-#     '#80EEFF', # Curva Principal (Ciano Pastel Elétrico com Brilho)
-#     '#E0D7FF', # Área de Erro (Lavanda Pastel Transparente)
-#     '#FFD59F', # Tendência slope=0 (Pêssego Neon Suave com Brilho)
-#     '#9DFFB0', # Tendência slope=1/2 (Menta Neon Suave com Brilho)
-#     '#FFB3E6', # Tendência slope=-1/2 (Rosa Neon Suave com Brilho)
-#     '#FF99CC'  # Outra Tendência (Magenta Neon Suave com Brilho)
-# ]
-
-# synthwave_light_palette = [
-#     '#3c1053',  # dark purple
-#     '#cc0066',  # deep magenta
-#     '#008080',  # teal / dark cyan
-#     '#e65c00',  # sunset orange
-#     '#6600cc'   # electric purple
-# ]
-
-# t = np.linspace(0, 1, 1000)
-# for i,color in enumerate(my_colors[:8]):
-
-# # Função para visualizar a nova paleta
-# def display_revised_palette(color_list):
-#     if plt.fignum_exists(1):
-#         plt.close(1)
-#     fig, ax = plt.subplots(num=1,figsize=(10, 2))
-#     for index, hex_color in enumerate(color_list):
-#         # ax.add_patch(plt.Rectangle((index, 0), 1, 1, color=hex_color))
-#         y = np.sin(2*np.pi*t-.1*index)
-#         ax.plot(t, y, color=hex_color,lw=.1)
-
-#     plt.show()
-
-# # configure grid and background for academic layout
-# plt.grid(color='#e0e0e0', linestyle='--', linewidth=0.5)
-# plt.gca().set_facecolor('#f0ffff')
-# # # Executa a visualização
-# display_revised_palette(revised_white_bg_palette)
-# display_revised_palette(pastel_synth_palette)
-# display_revised_palette(my_colors)
-# display_revised_palette(synthwave_light_palette)

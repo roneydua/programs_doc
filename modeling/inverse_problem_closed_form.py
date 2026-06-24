@@ -76,7 +76,7 @@ class closed_form_estimator:
         self.h_trans_pinv = np.linalg.pinv(self.h_trans_matrix)
         self.h_comp_pinv = np.linalg.pinv(self.h_comp_matrix)
         self.h_term_pinv = np.linalg.pinv(self.h_term_matrix)
-        self.h_12_pinv = np.linalg.inv(self.h_12_matrix)
+        self.h_12_pinv = np.linalg.pinv(self.h_12_matrix)
 
     def estimate_translational(self, fiber_lengths: np.ndarray) -> np.ndarray:
         """
