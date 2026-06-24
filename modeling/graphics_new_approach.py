@@ -496,53 +496,78 @@ class inverse_problem_visualizer:
         """
         plots the estimated temperature gradient if the 7-dof model was loaded.
         """
-        has_temp = any("dT_est" in est for est in self.estimations.values())
-        if not has_temp:
-            return
+        has_temp_7dof = any("dT_est" in est for est in self.estimations.values())
+        has_temp_12dof = any("dT_est_face_0" in est for est in self.estimations.values())
+        
+        # 1. Gráfic de temperatura uniforme
+        if has_temp_7dof:
+            fig, ax = plt.subplots(1, 1, dpi=self.dpi, figsize=(FIG_L, FIG_A))
+            _ax_error = ax.twinx()
+            plotted_traditional = False
+            for idx, (label, est_data) in enumerate(self.estimations.items()):
+                if "dT_est" in est_data and "dT_true" in est_data:
+                    plotted_traditional = True
+                    color = self.colors[idx % len(self.colors)]
+                    _ax_error.fill_between(
+                        self.time,
+                        np.zeros(len(self.time)),
+                        np.abs(est_data["dT_est"] - est_data["dT_true"]),
+                        color=self.colors[0],
+                        alpha=0.2,
+                    )
+                    ax.plot(
+                        self.time,
+                        est_data["dT_true"],
+                        color="black",
+                        lw=2,
+                        label="Referência",
+                    )
+                    ax.plot(
+                        self.time,
+                        est_data["dT_est"],
+                        color=self.colors[1],
+                        label="Estimado",
+                    )
+            if plotted_traditional:
+                _ax_error.set_ylabel(r"Erro de $\Delta T\; [\si{\degreeCelsius}]$")
+                ax.set_ylabel(r"$\Delta T\; [\si{\degreeCelsius}]$")
+                ax.set_xlabel(r"Tempo $[\si{\second}]$")
+                ax.grid(True)
+                ax.legend()
+                plt.savefig(
+                    TESE_IMAGE_FOLDER + f"temperature_estimation_{self.case}.pdf", format="pdf"
+                )
+            plt.close("all")
 
-        fig, ax = plt.subplots(1, 1, dpi=self.dpi, figsize=(FIG_L, FIG_A))
-        _ax_error = ax.twinx()
-        for idx, (label, est_data) in enumerate(self.estimations.items()):
-            print(label)
-            if "dT_est" in est_data:
-                print(label)
-                color = self.colors[idx % len(self.colors)]
-                # _ax_error.plot(
-                #     self.time,
-                #     np.abs(est_data["dT_est"] - est_data["dT_true"]),
-                #     color=self.colors[0],
-                #     label="Erro",
-                # )
-                _ax_error.fill_between(
-                    self.time,
-                    np.zeros(len(self.time)),
-                    np.abs(est_data["dT_est"] - est_data["dT_true"]),
-                    color=self.colors[0],
-                    alpha=0.2,
-                )
-                ax.plot(
-                    self.time,
-                    est_data["dT_true"],
-                    color="black",
-                    lw=2,
-                    label="Referência",
-                )
-                ax.plot(
-                    self.time,
-                    est_data["dT_est"],
-                    color=self.colors[1],
-                    label="Estimado",
-                )
-        _ax_error.set_ylabel(r"Erro de $\Delta T\; [\si{\degreeCelsius}]$")
-        ax.set_ylabel(r"$\Delta T\; [\si{\degreeCelsius}]$")
-        ax.set_xlabel(r"Tempo $[\si{\second}]$")
-        # ax.set_title("Estimação da variação de temperatura")
-        ax.grid(True)
-        ax.legend()
-        plt.savefig(
-            TESE_IMAGE_FOLDER + f"temperature_estimation_{self.case}.pdf", format="pdf"
-        )
-        plt.close("all")
+        # 2. Nova Analise: Comparação 7-GDL vs 12-GDL sob Gradiente Cruzado
+        if has_temp_12dof:
+            fig, ax = plt.subplots(1, 1, dpi=self.dpi, figsize=(FIG_L, FIG_A))
+            
+            # Identificar os datasets
+            est_12dof = next((data for data in self.estimations.values() if "dT_est_face_0" in data), None)
+            est_7dof = next((data for label, data in self.estimations.items() if "dT_est" in data and label == "7-GDL"), None)
+            
+            # Plotar a temperatura de referência para as faces das extremidades do gradiente
+            if est_12dof is not None and "dT_true_face_0" in est_12dof and "dT_true_face_1" in est_12dof:
+                ax.plot(self.time, est_12dof["dT_true_face_0"], color="black", lw=2, label=r"Ref. (+x, +y, +z)")
+                ax.plot(self.time, est_12dof["dT_true_face_1"], color="gray", lw=2, ls="--", label=r"Ref. (-x, -y, -z)")
+                
+                # Plotar estimativas do 12-GDL para as faces correspondentes
+                ax.plot(self.time, est_12dof["dT_est_face_0"], color=self.colors[1], lw=1.5, label="12-GDL (+x, +y, +z)")
+                ax.plot(self.time, est_12dof["dT_est_face_1"], color=self.colors[2], lw=1.5, label="12-GDL (-x, -y, -z)")
+                
+            # Plotar a estimativa "cega" do 7-GDL (que assume uma temperatura uniforme)
+            if est_7dof is not None and "dT_est" in est_7dof:
+                ax.plot(self.time, est_7dof["dT_est"], color=self.colors[3], lw=2, ls=":", label="7-GDL (Global Uniforme)")
+                
+            ax.set_ylabel(r"$\Delta T\; [\si{\degreeCelsius}]$")
+            ax.set_xlabel(r"Tempo $[\si{\second}]$")
+            ax.grid(True)
+            ax.legend(loc="upper right", fontsize=8)
+            plt.savefig(
+                TESE_IMAGE_FOLDER + f"temperature_estimation_faces_{self.case}.pdf", format="pdf", bbox_inches="tight"
+            )
+            plt.close("all")
 
     def show_all(self):
         self.plot_specific_force()
