@@ -31,6 +31,7 @@ class closed_form_estimator:
         self.h_trans_matrix = np.zeros((self.num_active, 3))  # 3-DOF
         self.h_comp_matrix = np.zeros((self.num_active, 6))  # 6-DOF
         self.h_term_matrix = np.zeros((self.num_active, 7))  # 7-DOF
+        self.h_12_matrix = np.zeros((self.num_active, 12))  # 12-DOF
 
         # nominal lengths at static equilibrium
         self.l_0 = np.zeros(self.n_fibers)
@@ -64,12 +65,18 @@ class closed_form_estimator:
             self.h_term_matrix[idx, 0:3] = d_j / self.l_0[j]
             self.h_term_matrix[idx, 3:6] = torque_vec / self.l_0[j]
             self.h_term_matrix[idx, 6] = self.l_0[j] * self.k_t
+            # 4. 12-DOF thermokinematic matrix
+            self.h_12_matrix[idx, 0:3] = d_j / self.l_0[j]
+            self.h_12_matrix[idx, 3:6] = torque_vec / self.l_0[j]
+            face_idx = j // 2
+            self.h_12_matrix[idx, 6 + face_idx] = self.l_0[j] * self.k_t
 
         # compute and store pseudoinverses offline to save clock cycles in real-time
         # H^T * H dimension will be 3x3, 6x6, and 7x7 respectively.
         self.h_trans_pinv = np.linalg.pinv(self.h_trans_matrix)
         self.h_comp_pinv = np.linalg.pinv(self.h_comp_matrix)
         self.h_term_pinv = np.linalg.pinv(self.h_term_matrix)
+        self.h_12_pinv = np.linalg.inv(self.h_12_matrix)
 
     def estimate_translational(self, fiber_lengths: np.ndarray) -> np.ndarray:
         """
@@ -102,6 +109,13 @@ class closed_form_estimator:
 
         return self.h_term_pinv @ delta_l
 
+
+
+    def estimate_thermokinematic_12dof(self, fiber_lengths: np.ndarray) -> np.ndarray:
+        delta_l = np.zeros(self.num_active)
+        for idx, j in enumerate(self.active_fibers):
+            delta_l[idx] = fiber_lengths[j] - self.l_0[j]
+        return self.h_12_pinv @ delta_l
 
 def solve_inverse_problem_closed_form(case: str, mmq_mode: int, active_fibers:list[int]):
     """
@@ -137,6 +151,7 @@ def solve_inverse_problem_closed_form(case: str, mmq_mode: int, active_fibers:li
     estimated_r_rel = np.zeros((num_steps, 3))
     estimated_euler = np.zeros((num_steps, 3))
     estimated_dT = np.zeros(num_steps)
+    estimated_dT_faces = np.zeros((num_steps, 6))
     estimated_fiber_lengths = np.zeros((num_steps, 12))
 
     print(f"solving inverse problem via closed-form estimation (mode {mmq_mode})...")
@@ -164,6 +179,14 @@ def solve_inverse_problem_closed_form(case: str, mmq_mode: int, active_fibers:li
             euler_est = x_est[3:6]
             dT_est = x_est[6]
             group_name = "inverse_output_closed_form_translacional_angular_thermal"
+        elif mmq_mode == 4:
+            x_est = estimator.estimate_thermokinematic_12dof(measured_lengths)
+            r_rel_est = x_est[0:3]
+            euler_est = x_est[3:6]
+            dT_est_faces_i = x_est[6:12]
+            dT_est = 0.0
+            group_name = "inverse_output_closed_form_12dof"
+
 
         # recreate the rotation matrix exactly as formulated in the linear model: R = I + skew(theta)
         theta_x, theta_y, theta_z = euler_est
@@ -182,6 +205,8 @@ def solve_inverse_problem_closed_form(case: str, mmq_mode: int, active_fibers:li
         estimated_r_rel[i, :] = r_rel_est
         estimated_euler[i, :] = euler_est
         estimated_dT[i] = dT_est
+        if mmq_mode == 4:
+            estimated_dT_faces[i, :] = dT_est_faces_i
 
         # 2. algebraic inversion (quasi-static assumption) to recover accelerations
         f_b, dot_omega_b, fiber_lengths_model = model.inverse_dynamics_quasi_static(
@@ -208,11 +233,19 @@ def solve_inverse_problem_closed_form(case: str, mmq_mode: int, active_fibers:li
             "euler_est_x": estimated_euler[:, 0],
             "euler_est_y": estimated_euler[:, 1],
             "euler_est_z": estimated_euler[:, 2],
-            "dT_true": df_sim["dT_true"],
         }
     )
+    if "dT_true" in df_sim.columns:
+        df_inv["dT_true"] = df_sim["dT_true"]
+
     if mmq_mode == 3:
         df_inv["dT_est"] = estimated_dT
+    elif mmq_mode == 4:
+        for f_idx in range(6):
+            df_inv[f"dT_est_face_{f_idx}"] = estimated_dT_faces[:, f_idx]
+            if f"dT_true_face_{f_idx}" in df_sim.columns:
+                df_inv[f"dT_true_face_{f_idx}"] = df_sim[f"dT_true_face_{f_idx}"]
+
 
     for i in range(12):
         df_inv[f"fiber_{i+1}_length_est"] = estimated_fiber_lengths[:, i]

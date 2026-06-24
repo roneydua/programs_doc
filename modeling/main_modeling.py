@@ -29,7 +29,7 @@ def run_full_pipeline():
 
 
 def add_perturbations():
-    apply_thermokinematic_perturbation(apply_perturbation=APPLY_PERTURBATION,case=CASE_NAME, noise_std=10e-12)
+    apply_thermokinematic_perturbation(apply_perturbation=APPLY_PERTURBATION,case=CASE_NAME, noise_std=10e-12, mode='12dof')
     run_estimation()
 
 
@@ -41,6 +41,9 @@ def run_estimation():
     )
     solve_inverse_problem_closed_form(
         case=CASE_NAME, mmq_mode=3, active_fibers=[0, 1, 4, 5, 8, 9, 11]
+    )
+    solve_inverse_problem_closed_form(
+        case=CASE_NAME, mmq_mode=4, active_fibers=list(range(12))
     )
 
     print("done")

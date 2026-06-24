@@ -10,6 +10,7 @@ def apply_thermokinematic_perturbation(
     input_file: str = "./modeling/data/modeling.h5",
     output_file: str = "./modeling/data/modeling.h5",
     noise_std:float=1e-9,  # standard deviation of the optical interrogator noise (e.g., 1 nm)
+    mode:str='12dof'
 ):
     """
     reads the clean kinematic simulation data, applies a time-varying thermal gradient,
@@ -39,10 +40,24 @@ def apply_thermokinematic_perturbation(
     # example: a linear ramp from 0 C to 30C
     # delta_t_profile = np.linspace(0.0, 30.0, num_steps)
 
+    delta_t_profile = np.zeros((12, num_steps))
     if apply_perturbation:
-        delta_t_profile =50/time[-1] * time  * np.sin(2.0 * np.pi * 2.0 * time)
-    else:
-        delta_t_profile = np.zeros(num_steps)
+        if mode == "12dof":
+            u_grad = np.array([1.0, 1.0, 1.0]) / np.sqrt(3.0)
+            n_faces = np.array([
+                [1,0,0], [-1,0,0], [0,1,0], [0,-1,0], [0,0,1], [0,0,-1]
+            ])
+            T_med = 35.0
+            delta_T_max = 10.0
+            dynamic_part = 50/time[-1] * time * np.sin(2.0 * np.pi * 2.0 * time)
+            for i in range(6):
+                T_face = T_med + dynamic_part + (delta_T_max / 2.0) * np.dot(n_faces[i], u_grad)
+                delta_t_profile[2*i, :] = T_face
+                delta_t_profile[2*i + 1, :] = T_face
+        else:
+            profile = 50/time[-1] * time * np.sin(2.0 * np.pi * 2.0 * time)
+            for j in range(12):
+                delta_t_profile[j, :] = profile
     df_perturbed = df_sim.copy()
 
     if plt.fignum_exists(3):
@@ -55,7 +70,7 @@ def apply_thermokinematic_perturbation(
         clean_lengths = df_sim[col_name].values
 
         # calculate the apparent elongation caused by temperature
-        thermal_elongation = l_0[j] * k_t * delta_t_profile
+        thermal_elongation = l_0[j] * k_t * delta_t_profile[j, :]
 
         # generate white gaussian noise for this specific fiber
         white_noise = np.random.normal(loc=0.0, scale=noise_std, size=num_steps)
@@ -71,7 +86,11 @@ def apply_thermokinematic_perturbation(
         # _ax[j].set_ylabel(col_name)
         # _ax[j].legend()
     # save the true temperature profile in the h5 so we can plot and compare later!
-    df_perturbed["dT_true"] = delta_t_profile
+    if mode == "12dof":
+        for i in range(6):
+            df_perturbed[f"dT_true_face_{i}"] = delta_t_profile[2*i, :]
+    else:
+        df_perturbed["dT_true"] = delta_t_profile[0, :]
     # plt.show()
     df_perturbed.to_hdf(
         output_file, key=f"{case}/simulation_output_perturbed", mode="a"
