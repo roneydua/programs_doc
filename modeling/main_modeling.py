@@ -11,81 +11,67 @@ from modeling.optical_push_pull import solve_inverse_problem_optical_push_pull
 from modeling.add_thermal_noise import apply_thermokinematic_perturbation
 from modeling.graphics_new_approach import plot_graphics
 import argparse
-
-APPLY_PERTURBATION = True
-if APPLY_PERTURBATION:
-    CASE_NAME = "sinusoidal_with_temp_perturbation"
-else:
-    CASE_NAME = "sinusoidal_without_temp_perturbation"
+import argparse
+from modeling.main_dynamics import simulate_dynamics
+from modeling.inverse_problem_closed_form import solve_inverse_problem_closed_form
+from modeling.optical_push_pull import solve_inverse_problem_optical_push_pull
+from modeling.add_thermal_noise import apply_thermokinematic_perturbation
+from modeling.graphics_new_approach import plot_graphics
 
 def run_full_pipeline():
-    # Bloco 1: Dinâmica
-    print("integrate dynamics")
-    simulate_dynamics(case=CASE_NAME, t_end=3, dt=1e-2)
-
-    print("add pertubation on data")
-    add_perturbations()
-    # Bloco 2: Estimação (Inverse Problem)
-
-
-def add_perturbations():
-    apply_thermokinematic_perturbation(apply_perturbation=APPLY_PERTURBATION,case=CASE_NAME, noise_std=10e-12, mode='12dof')
-    run_estimation()
-
-
-def run_estimation():
-    print("solve inverse problem")
-    # solve_inverse_problem_closed_form(case=CASE_NAME,mmq_mode=1)
-    solve_inverse_problem_closed_form(
-        case=CASE_NAME, mmq_mode=2, active_fibers=[0, 1, 4, 5, 8, 9, 11]
+    # Frente 1: all_faces_with_equal_temp
+    case_1 = "all_faces_with_equal_temp"
+    print(f"--- Running Frente 1: {case_1} ---")
+    simulate_dynamics(case=case_1, t_end=3, dt=1e-2)
+    apply_thermokinematic_perturbation(
+        apply_perturbation=True, case=case_1, noise_std=10e-12, mode='7dof'
     )
+    # Estimate 6-DOF (mmq_mode=2)
     solve_inverse_problem_closed_form(
-        case=CASE_NAME, mmq_mode=3, active_fibers=[0, 1, 4, 5, 8, 9, 11]
+        case=case_1, mmq_mode=2, active_fibers=[0, 1, 4, 5, 8, 9, 11]
     )
+    # Estimate 7-DOF (mmq_mode=3)
     solve_inverse_problem_closed_form(
-        case=CASE_NAME, mmq_mode=4, active_fibers=list(range(12))
+        case=case_1, mmq_mode=3, active_fibers=[0, 1, 4, 5, 8, 9, 11]
     )
-
-    print("done")
-    print("Solving optical push-pull")
+    # Optical Push-Pull
     solve_inverse_problem_optical_push_pull(
-        case=CASE_NAME,
+        case=case_1,
         push_pull_pairs=[[0, 3], [4, 7], [8, 11]],
         name_save="inverse_output_optical_push_pull_cruzed",
     )
     solve_inverse_problem_optical_push_pull(
-        case=CASE_NAME,
+        case=case_1,
         push_pull_pairs=[[0, 2], [4, 6], [8, 10]],
         name_save="inverse_output_optical_push_pull_aligned",
     )
-    plot()
+    # Plotting for Frente 1
+    plot_graphics(case=case_1, is_second_approach=False)
 
-
-def plot():
-    plot_graphics(case=CASE_NAME)
-
+    # Frente 2: temp_gradient_analisys
+    case_2 = "temp_gradient_analisys"
+    print(f"--- Running Frente 2: {case_2} ---")
+    simulate_dynamics(case=case_2, t_end=3, dt=1e-2)
+    apply_thermokinematic_perturbation(
+        apply_perturbation=True, case=case_2, noise_std=10e-12, mode='12dof'
+    )
+    # Estimate 7-DOF (mmq_mode=3)
+    solve_inverse_problem_closed_form(
+        case=case_2, mmq_mode=3, active_fibers=[0, 1, 4, 5, 8, 9, 11]
+    )
+    # Estimate 12-DOF (mmq_mode=4)
+    solve_inverse_problem_closed_form(
+        case=case_2, mmq_mode=4, active_fibers=list(range(12))
+    )
+    # Plotting for Frente 2
+    plot_graphics(case=case_2, is_second_approach=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Script de simulação e inversão.")
-
-    # Criamos um grupo mutuamente exclusivo: ou roda um, ou roda outro
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--all", action="store_true", help="Roda a pipeline completa")
-    group.add_argument(
-        "--perturbation", action="store_true", help="add perturbation on fiber lengths"
-    )
-    group.add_argument(
-        "--estimation", action="store_true", help="Run all estimation inverso"
-    )
-    group.add_argument("--graphics", action="store_true", help="Graphics only")
 
     args = parser.parse_args()
 
     if args.all:
         run_full_pipeline()
-    elif args.perturbation:
-        add_perturbations()
-    elif args.estimation:
-        run_estimation()
-    elif args.graphics:
-        plot()

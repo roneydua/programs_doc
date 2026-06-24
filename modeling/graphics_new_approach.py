@@ -21,11 +21,13 @@ class inverse_problem_visualizer:
         self,
         case: str,
         data_main_file="./modeling/data/modeling.h5",
+        is_second_approach: bool = False,
     ):
         self.dpi = 144
         self.colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
         self.axis_labels = [r"\mathbf{x}", r"\mathbf{y}", r"\mathbf{z}"]
         self.case = case
+        self.is_second_approach = is_second_approach
         # dictionary to store multiple estimation datasets
         self.estimations = {}
         self.data_main_file = data_main_file
@@ -142,8 +144,9 @@ class inverse_problem_visualizer:
         )
         # ax[0, 0].legend(ncols=3)
         fig.supxlabel(r"Tempo [\si{\second}]")
+        suffix = "_second_approach" if self.is_second_approach else ""
         plt.savefig(
-            TESE_IMAGE_FOLDER + "estados_referencia_translacional.pdf",
+            TESE_IMAGE_FOLDER + f"estados_referencia_translacional{suffix}.pdf",
             format="pdf",
             bbox_inches="tight",
         )
@@ -198,8 +201,9 @@ class inverse_problem_visualizer:
         ax[2, 0].legend(ncols=3)
 
         fig.supxlabel(r"Tempo [\si{\second}]")
+        suffix = "_second_approach" if self.is_second_approach else ""
         plt.savefig(
-            TESE_IMAGE_FOLDER + "estados_referencia_rotacional.pdf",
+            TESE_IMAGE_FOLDER + f"estados_referencia_rotacional{suffix}.pdf",
             format="pdf",
             bbox_inches="tight",
         )
@@ -304,8 +308,9 @@ class inverse_problem_visualizer:
             frameon=True,
         )
         fig.supylabel(sup_ylabel)
+        suffix = "_second_approach" if self.is_second_approach else ""
         plt.savefig(
-            f"{TESE_IMAGE_FOLDER}{figure_save_name}_{self.case}.pdf",
+            f"{TESE_IMAGE_FOLDER}{figure_save_name}_{self.case}{suffix}.pdf",
             bbox_inches="tight",
             format="pdf",
         )
@@ -429,8 +434,9 @@ class inverse_problem_visualizer:
         fig.supxlabel(r"Tempo $[\si{\second}]$")
         fig.supylabel("Erro de estimação dos comprimentos das fibras " + unit)
         # fig.suptitle("Erro de Estimação dos Comprimentos Ópticos")
+        suffix = "_second_approach" if self.is_second_approach else ""
         plt.savefig(
-            TESE_IMAGE_FOLDER + f"erro_estimacao_comprimentos_fibras_{self.case}.pdf",
+            TESE_IMAGE_FOLDER + f"erro_estimacao_comprimentos_fibras_{self.case}{suffix}.pdf",
             bbox_inches="tight",
             format="pdf",
         )
@@ -485,8 +491,9 @@ class inverse_problem_visualizer:
         fig.supxlabel(r"Tempo $[\si{\second}]$")
         fig.supylabel("Deformações das fibras " + unit)
         # fig.suptitle("Erro de Estimação dos Comprimentos Ópticos")
+        suffix = "_second_approach" if self.is_second_approach else ""
         plt.savefig(
-            TESE_IMAGE_FOLDER + f"deformacoes_estimadas_fibras_{self.case}.pdf",
+            TESE_IMAGE_FOLDER + f"deformacoes_estimadas_fibras_{self.case}{suffix}.pdf",
             bbox_inches="tight",
             format="pdf",
         )
@@ -534,8 +541,9 @@ class inverse_problem_visualizer:
                 ax.set_xlabel(r"Tempo $[\si{\second}]$")
                 ax.grid(True)
                 ax.legend()
+                suffix = "_second_approach" if self.is_second_approach else ""
                 plt.savefig(
-                    TESE_IMAGE_FOLDER + f"temperature_estimation_{self.case}.pdf", format="pdf"
+                    TESE_IMAGE_FOLDER + f"temperature_estimation_{self.case}{suffix}.pdf", format="pdf"
                 )
             plt.close("all")
 
@@ -564,8 +572,9 @@ class inverse_problem_visualizer:
             ax.set_xlabel(r"Tempo $[\si{\second}]$")
             ax.grid(True)
             ax.legend(loc="upper right", fontsize=8)
+            suffix = "_second_approach" if self.is_second_approach else ""
             plt.savefig(
-                TESE_IMAGE_FOLDER + f"temperature_estimation_faces_{self.case}.pdf", format="pdf", bbox_inches="tight"
+                TESE_IMAGE_FOLDER + f"temperature_estimation_faces_{self.case}{suffix}.pdf", format="pdf", bbox_inches="tight"
             )
             plt.close("all")
 
@@ -584,41 +593,43 @@ class inverse_problem_visualizer:
         plt.show()
 
 
-def plot_graphics(case: str):
-    visualizer = inverse_problem_visualizer(case)
+def plot_graphics(case: str, is_second_approach: bool = False):
+    visualizer = inverse_problem_visualizer(case, is_second_approach=is_second_approach)
 
-    # load multiple datasets to compare
-    # visualizer.add_estimation(
-    #     label="3-DOF",
-    #     filepath="./modeling/data/inverse_output_closed_form_translacional.h5",
-    # )
-    # visualizer.add_estimation(
-    #     key="inverse_inverse_output_closed_form_translacional_angular", label="6-GDL"
-    # )
-    visualizer.add_estimation(
-        label="7-GDL",
-        key="inverse_inverse_output_closed_form_translacional_angular_thermal",
-    )
-
-    visualizer.add_estimation(
-        label="\\emph{Push-pull} cruzado",
-        key="inverse_output_optical_push_pull_cruzed",
-    )
-    visualizer.add_estimation(
-        label="\\emph{Push-pull} alinhado",
-        key="inverse_output_optical_push_pull_aligned",
-    )
-    visualizer.add_estimation(
-        label="12-GDL",
-        key="inverse_inverse_output_closed_form_12dof",
-    )
-    # visualizer.add_estimation(label="Levenberg-Marquardt", key="inverse_output_lm.h5")
+    if not is_second_approach:
+        # Front 1
+        visualizer.add_estimation(
+            label="6-GDL",
+            key="inverse_inverse_output_closed_form_translacional_angular",
+        )
+        visualizer.add_estimation(
+            label="7-GDL",
+            key="inverse_inverse_output_closed_form_translacional_angular_thermal",
+        )
+        visualizer.add_estimation(
+            label="\\emph{Push-pull} cruzado",
+            key="inverse_output_optical_push_pull_cruzed",
+        )
+        visualizer.add_estimation(
+            label="\\emph{Push-pull} alinhado",
+            key="inverse_output_optical_push_pull_aligned",
+        )
+    else:
+        # Front 2
+        visualizer.add_estimation(
+            label="7-GDL",
+            key="inverse_inverse_output_closed_form_translacional_angular_thermal",
+        )
+        visualizer.add_estimation(
+            label="12-GDL",
+            key="inverse_inverse_output_closed_form_12dof",
+        )
 
     # generate and show all plots
     visualizer.show_all()
 
 
 if __name__ == "__main__":
-    plot_graphics("sinusoidal_with_temp_perturbation")
+    plot_graphics("sinusoidal_with_temp_perturbation", False)
 
 
