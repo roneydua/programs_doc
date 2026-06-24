@@ -11,12 +11,6 @@ from modeling.optical_push_pull import solve_inverse_problem_optical_push_pull
 from modeling.add_thermal_noise import apply_thermokinematic_perturbation
 from modeling.graphics_new_approach import plot_graphics
 import argparse
-import argparse
-from modeling.main_dynamics import simulate_dynamics
-from modeling.inverse_problem_closed_form import solve_inverse_problem_closed_form
-from modeling.optical_push_pull import solve_inverse_problem_optical_push_pull
-from modeling.add_thermal_noise import apply_thermokinematic_perturbation
-from modeling.graphics_new_approach import plot_graphics
 
 def run_dynamics():
     case_1 = "all_faces_with_equal_temp"

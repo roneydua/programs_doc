@@ -95,6 +95,13 @@ class inverse_problem_visualizer:
                 est_data["dT_est"] = df_inv["dT_est"].values
             if "dT_true" in df_inv.columns:
                 est_data["dT_true"] = df_inv["dT_true"].values
+                
+            # check if face temperatures were estimated (12-DOF scenario)
+            for f_idx in range(6):
+                if f"dT_est_face_{f_idx}" in df_inv.columns:
+                    est_data[f"dT_est_face_{f_idx}"] = df_inv[f"dT_est_face_{f_idx}"].values
+                if f"dT_true_face_{f_idx}" in df_inv.columns:
+                    est_data[f"dT_true_face_{f_idx}"] = df_inv[f"dT_true_face_{f_idx}"].values
 
             self.estimations[label] = est_data
             print(f"loaded estimation: {label} from {label}")
@@ -578,6 +585,39 @@ class inverse_problem_visualizer:
             )
             plt.close("all")
 
+    def plot_temperature_6_faces(self):
+        has_temp_12dof = any("dT_est_face_0" in est for est in self.estimations.values())
+        if not has_temp_12dof:
+            return
+            
+        fig, axs = plt.subplots(3, 2, dpi=self.dpi, figsize=(FIG_L, FIG_A * 2), sharex=True, sharey=True)
+        est_12dof = next((data for data in self.estimations.values() if "dT_est_face_0" in data), None)
+        
+        faces_labels = ["+x", "-x", "+y", "-y", "+z", "-z"]
+        for i in range(6):
+            row = i // 2
+            col = i % 2
+            if f"dT_true_face_{i}" in est_12dof:
+                axs[row, col].plot(self.time, est_12dof[f"dT_true_face_{i}"], color="black", lw=2, ls="--", label="Referência")
+            if f"dT_est_face_{i}" in est_12dof:
+                axs[row, col].plot(self.time, est_12dof[f"dT_est_face_{i}"], color=self.colors[i%len(self.colors)], lw=1.5, label=f"12-GDL")
+            axs[row, col].set_title(f"Face {faces_labels[i]}", fontsize=10)
+            axs[row, col].grid(True)
+            if row == 2:
+                axs[row, col].set_xlabel(r"Tempo $[\si{\second}]$")
+            if col == 0:
+                axs[row, col].set_ylabel(r"$\Delta T\; [\si{\degreeCelsius}]$")
+                
+        handles, labels = axs[0, 0].get_legend_handles_labels()
+        if handles:
+            fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 1.02), ncol=2, frameon=True)
+        
+        suffix = "_second_approach" if self.is_second_approach else ""
+        plt.savefig(
+            TESE_IMAGE_FOLDER + f"temperature_estimation_6_faces_{self.case}{suffix}.pdf", format="pdf", bbox_inches="tight"
+        )
+        plt.close("all")
+
     def show_all(self):
         self.plot_specific_force()
         self.plot_angular_acceleration()
@@ -588,9 +628,10 @@ class inverse_problem_visualizer:
             multipler=1e6, unit=r"[\si{\micro\strain}]"
         )
         self.plot_temperature()
+        self.plot_temperature_6_faces()
         self._plot_trajectory_translational()
         self._plot_trajectory_rotational()
-        plt.show()
+        # plt.show()
 
 
 def plot_graphics(case: str, is_second_approach: bool = False):

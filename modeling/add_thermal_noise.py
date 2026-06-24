@@ -47,11 +47,10 @@ def apply_thermokinematic_perturbation(
             n_faces = np.array([
                 [1,0,0], [-1,0,0], [0,1,0], [0,-1,0], [0,0,1], [0,0,-1]
             ])
-            T_med = 35.0
-            delta_T_max = 10.0
+            delta_T_max = 3.0
             dynamic_part = 50/time[-1] * time * np.sin(2.0 * np.pi * 2.0 * time)
             for i in range(6):
-                T_face = T_med + dynamic_part + (delta_T_max / 2.0) * np.dot(n_faces[i], u_grad)
+                T_face = dynamic_part + (delta_T_max / 2.0) * np.dot(n_faces[i], u_grad)
                 delta_t_profile[2*i, :] = T_face
                 delta_t_profile[2*i + 1, :] = T_face
         else:
